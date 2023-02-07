@@ -32,7 +32,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("com.github.jasync-sql:jasync-r2dbc-mysql:2.1.7")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive:3.0.2")
+    implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
     implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
