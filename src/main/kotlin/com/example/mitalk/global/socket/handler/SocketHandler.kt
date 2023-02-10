@@ -2,6 +2,7 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.global.socket.ChatService
 import com.example.mitalk.global.socket.dto.ChatMessage
+import com.example.mitalk.global.socket.dto.Role
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.BinaryMessage
@@ -13,12 +14,15 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 @Component
 class SocketHandler(
     val mapper: ObjectMapper,
-    val chatService: ChatService
+    val chatService: ChatService,
 ) : TextWebSocketHandler() {
     companion object {
         private var list: MutableList<WebSocketSession> = arrayListOf()
     }
     override fun afterConnectionEstablished(session: WebSocketSession) {
+        session.attributes.forEach {
+            println(session.attributes)
+        }
         list.add(session)
         println("$session 클라이언트 접속")
     }
