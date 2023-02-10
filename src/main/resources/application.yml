@@ -2,23 +2,23 @@ server:
   port: 8080
   shutdown: graceful
 
-spring:
-  r2dbc:
-    url: ${DB_URL}
-    username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:cos1234}
-    pool:
-      max-size: 100
-      validation-query: SELECT 1
-  data:
-    mongodb:
-      host: ${DB_HOST:localhost}
-      port: ${DB_PORT:27017}
-      database: ${DB_DATABASE:test}
-  sql:
-    init:
-      mode: always
-
-logging:
-  level:
-    org.springframework.r2dbc.core: debug
+#spring:
+#  r2dbc:
+#    url: ${DB_URL}
+#    username: ${DB_USERNAME:root}
+#    password: ${DB_PASSWORD:cos1234}
+#    pool:
+#      max-size: 100
+#      validation-query: SELECT 1
+#  data:
+#    mongodb:
+#      host: ${DB_HOST:localhost}
+#      port: ${DB_PORT:27017}
+#      database: ${DB_DATABASE:test}
+#  sql:
+#    init:
+#      mode: always
+#
+#logging:
+#  level:
+#    org.springframework.r2dbc.core: debug

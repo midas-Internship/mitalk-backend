@@ -1,15 +1,21 @@
 package com.example.mitalk.global.socket.controller
 
+import com.example.mitalk.global.socket.ChatService
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+@RequestMapping("/chat")
 @RestController
-class SocketController {
+class SocketController(
+    val chatService: ChatService
+) {
 
-    @GetMapping("/chat")
-    fun getChat(): String {
-        println("@ChatController chat Get()")
+    @PostMapping
+    fun createRoom(@RequestParam name: String) = chatService.createRoom(name)
 
-        return "chat"
-    }
+    @GetMapping
+    fun findAllRoom() = chatService.findAllRoom()
 }
