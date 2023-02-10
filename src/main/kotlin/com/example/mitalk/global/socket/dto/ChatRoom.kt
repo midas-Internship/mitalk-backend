@@ -19,7 +19,7 @@ class ChatRoom(
     }
 
     private fun <T> sendMessage(message: T, chatService: ChatService) {
-        sessions.parallelStream().forEach{
+        sessions.parallelStream().forEach {
                 s -> chatService.sendMessage(message, s)
         }
     }
