@@ -12,13 +12,12 @@ import java.time.ZonedDateTime
 
 @Service
 class SignInServiceImpl(
-        private val jwtTokenProvider: JwtTokenProvider,
-        private val customerRepository: CustomerRepository,
-        private val customerUtil: CustomerUtil
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val customerRepository: CustomerRepository,
+    private val customerUtil: CustomerUtil
 ) : SignInService {
-    override fun execute(requestDto: SignInRequest) {
+    override fun execute(requestDto: SignInRequest): SignInResponseDto {
         val customer = customerRepository.findByEmail(requestDto.email)
-                ?: throw CustomerNotFoundException()
         val accessToken: String = jwtTokenProvider.generateAccessToken(requestDto.email)
         val refreshToken: String = jwtTokenProvider.generateRefreshToken(requestDto.email)
         val accessExp: ZonedDateTime = jwtTokenProvider.accessExpiredTime
@@ -31,12 +30,10 @@ class SignInServiceImpl(
         }
 
         return SignInResponseDto(
-                accessToken = accessToken,
-                refreshToken = refreshToken,
-                accessExp = accessExp,
-                refreshExp = refreshExp
+            accessToken = accessToken,
+            refreshToken = refreshToken,
+            accessExp = accessExp,
+            refreshExp = refreshExp
         )
-
-        }
     }
 }

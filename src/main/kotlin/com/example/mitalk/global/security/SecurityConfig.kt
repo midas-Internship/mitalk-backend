@@ -35,7 +35,7 @@ class SecurityConfig(
                     CorsUtils.isPreFlightRequest(request)
                 }).permitAll()
 
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers(HttpMethod.POST, "/customer/login").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
 

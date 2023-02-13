@@ -7,6 +7,5 @@ class SignInResponseDto(
         val refreshToken: String,
         val accessExp: ZonedDateTime,
         val refreshExp: ZonedDateTime
-
 ) {
 }
