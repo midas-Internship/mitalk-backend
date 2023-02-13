@@ -1,12 +1,10 @@
 package com.example.mitalk.global.redis.util
 
-import org.springframework.data.domain.Range
-import org.springframework.data.redis.core.ReactiveZSetOperations
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ZSetOperations
 import org.springframework.stereotype.Component
-import reactor.core.publisher.Flux
-import reactor.core.publisher.Mono
+import java.time.Duration
 
 
 @Component
@@ -56,4 +54,8 @@ class RedisUtils(
     fun getzRank(key: String, value: String): Long? {
         return opsForZSet().rank(key, value!!)
     }
+
+    fun createObject(key: String, value: Any) = redisTemplate.opsForZSet().add(key, value, System.currentTimeMillis().toDouble())
+
+    fun createTimeOutObject(key: String, value: String, timeout: Duration) = redisTemplate.opsForValue().set(key, value , timeout)
 }

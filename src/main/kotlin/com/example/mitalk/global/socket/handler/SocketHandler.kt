@@ -15,6 +15,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler
 class SocketHandler(
     val mapper: ObjectMapper,
     val chatService: ChatService,
+
 ) : TextWebSocketHandler() {
     companion object {
         private var list: MutableList<WebSocketSession> = arrayListOf()
@@ -23,8 +24,12 @@ class SocketHandler(
         session.attributes.forEach {
             println(session.attributes)
         }
+        println("TEST" + session.handshakeHeaders["authorization"].toString())
+        val a: MutableList<String>? = session.handshakeHeaders["authorization"]
+        println("final " + a?.get(0))
         list.add(session)
         println("$session 클라이언트 접속")
+        println("${session.attributes.values} attributes")
     }
 
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {

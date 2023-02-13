@@ -1,5 +1,5 @@
 package com.example.mitalk.domain.customer.service
 
-interface CustomService {
-
+interface QueueCheckService {
+    fun execute()
 }
