@@ -21,5 +21,5 @@ class CustomServiceImpl(
 //        }
 //    }
 
-    fun findLastCountValueFromRedis() = redisTemplate.opsForZSet().rank("a", "anlkadmla")
+//    fun findLastCountValueFromRedis() = redisTemplate.opsForZSet().rank("a", "anlkadmla")
 }

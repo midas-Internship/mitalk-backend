@@ -1,29 +1,19 @@
 server:
-  port: 8082
+  port: 8080
   shutdown: graceful
 
 spring:
+  datasource:
+    driver-class-name:
   redis:
     host: localhost
     port: 6379
 
-#spring:
-#  r2dbc:
-#    url: ${DB_URL}
-#    username: ${DB_USERNAME:root}
-#    password: ${DB_PASSWORD:cos1234}
-#    pool:
-#      max-size: 100
-#      validation-query: SELECT 1
-#  data:
-#    mongodb:
-#      host: ${DB_HOST:localhost}
-#      port: ${DB_PORT:27017}
-#      database: ${DB_DATABASE:test}
-#  sql:
-#    init:
-#      mode: always
-#
-#logging:
-#  level:
-#    org.springframework.r2dbc.core: debug
+  data:
+    mongodb:
+      host: ${DB_HOST:localhost}
+      port: ${DB_PORT:27017}
+      database: ${DB_DATABASE:test}
+  sql:
+    init:
+      mode: always
