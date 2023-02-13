@@ -23,12 +23,12 @@ class ChatService(
 
     fun findRoomById(roomId: String) = chatRooms[roomId]
 
-    fun createRoom(name: String): ChatRoom {
-        val roomId: String = UUID.randomUUID().toString()
-        val chatRoom = ChatRoom(roomId = roomId, name = name)
-        chatRooms[roomId] = chatRoom
-        return chatRoom
-    }
+//    fun createRoom(name: String): ChatRoom {
+//        val roomId: String = UUID.randomUUID().toString()
+//        val chatRoom = ChatRoom(roomId = roomId, name = name)
+//        chatRooms[roomId] = chatRoom
+//        return chatRoom
+//    }
 
     fun <T> sendMessage(message: T, session: WebSocketSession) {
         session.sendMessage(TextMessage(mapper.writeValueAsString(message)))
