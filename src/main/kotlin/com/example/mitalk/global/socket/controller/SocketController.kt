@@ -13,8 +13,8 @@ class SocketController(
     val chatService: ChatService
 ) {
 
-    @PostMapping
-    fun createRoom(@RequestParam name: String) = chatService.createRoom(name)
+//    @PostMapping
+//    fun createRoom(@RequestParam name: String) = chatService.createRoom(name)
 
     @GetMapping
     fun findAllRoom() = chatService.findAllRoom()

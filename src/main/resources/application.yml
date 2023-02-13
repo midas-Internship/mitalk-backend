@@ -4,10 +4,22 @@ server:
   address: 192.168.0.6
 
 spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mitalk?serverTimezone=Asia/Seoul
+    username: root
+    password: ${DB_PASSWORD}
   redis:
     host: localhost
     port: 6379
-
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: tutorial
+jwt:
+  accessSecret: KhheB0euerVivwCL7P1WA0CL/N8Dt6EyQEa/Wi1XLaY5beneRnADC4KUQ+PAxMUBk8JuJvFl9mWk7zfkoNWlmA==
+  refreshSecret: RGNVNSDJAdDVhbGRvb2HzJEAjIQ==Wi1XLaY5beneRnADC4KUQ+PAxMUBk8J
 #spring:
 #  r2dbc:
 #    url: ${DB_URL}

@@ -1,10 +1,16 @@
 package com.example.mitalk.domain.customer.presentation
 
-import org.springframework.web.bind.annotation.GetMapping
+import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
+import com.example.mitalk.domain.customer.service.SignInService
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@RequestMapping("/customer")
 class CustomController(
+        private val signInService: SignInService
 ) {
 
 //    @PostMapping("/user/{userId}")
@@ -13,4 +19,9 @@ class CustomController(
 //
 //
 //    }
+
+    @PostMapping("/login")
+    fun login(@RequestBody() signInRequest: SignInRequest) {
+        return signInService.execute()
+    }
 }
