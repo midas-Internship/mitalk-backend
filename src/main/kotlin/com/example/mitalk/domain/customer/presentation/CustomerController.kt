@@ -22,6 +22,6 @@ class CustomController(
 
     @PostMapping("/login")
     fun login(@RequestBody() signInRequest: SignInRequest) {
-        return signInService.execute()
+        return signInService.execute(signInRequest)
     }
 }
