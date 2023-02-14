@@ -15,15 +15,13 @@ class CustomerController(
     private val signInService: SignInService
 ) {
 
-//    @PostMapping("/user/{userId}")
-//    fun saveUserSession(@PathVariable("userId") userId: String) {
-//        customerSessionRepository.save(CustomerSession(userId))
-//
-//
-//    }
-
     @PostMapping("/signin")
     fun signIn(@RequestBody() signInRequest: SignInRequest): ResponseEntity<SignInResponseDto> =
         signInService.execute(signInRequest)
             .let { ResponseEntity.ok(it) }
+
+    @PostMapping("/review")
+    fun createReview() {
+
+    }
 }
