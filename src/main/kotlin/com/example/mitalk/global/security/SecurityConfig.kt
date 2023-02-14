@@ -33,7 +33,7 @@ class SecurityConfig(
                 .requestMatchers(RequestMatcher { request ->
                     CorsUtils.isPreFlightRequest(request)
                 }).permitAll()
-                .antMatchers("/file").permitAll()
+                .antMatchers(HttpMethod.POST, "/file").authenticated()
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
