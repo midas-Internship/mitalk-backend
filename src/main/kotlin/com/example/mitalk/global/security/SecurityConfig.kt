@@ -37,7 +37,6 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
-//                .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
 
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
