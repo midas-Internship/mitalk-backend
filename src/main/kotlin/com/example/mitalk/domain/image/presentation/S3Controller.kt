@@ -1,6 +1,6 @@
 package com.example.mitalk.domain.image.presentation
 
-import com.example.mitalk.domain.image.presentation.data.ImagesDto
+import com.example.mitalk.domain.image.presentation.data.FileDto
 import com.example.mitalk.domain.image.service.UploadFileService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,7 +14,7 @@ class S3Controller(
         private val uploadFileService: UploadFileService
 ) {
     @PostMapping
-    fun fileUpload(@RequestParam(value = "file", required = false) multipartFile: List<MultipartFile>?): ImagesDto {
+    fun fileUpload(@RequestParam(value = "file", required = false) multipartFile: MultipartFile): FileDto {
         return uploadFileService.execute(multipartFile)
     }
 }
