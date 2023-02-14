@@ -10,6 +10,7 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
@@ -29,8 +30,9 @@ class JwtTokenProvider(
         const val ACCESS_TYPE = "access"
         const val REFRESH_TYPE = "refresh"
         const val ACCESS_EXP = 60L * 15 // 15 min
-        const val REFRESH_EXP = 60L * 60 * 24 * 7 // 1 weeks
+        const val REFRESH_EXP = 60L * 60 * 24 * 7 // 1 week
         const val TOKEN_PREFIX = "Bearer "
+        const val AUTHORITY = "authority"
     }
 
     val accessExpiredTime: ZonedDateTime
@@ -46,16 +48,13 @@ class JwtTokenProvider(
             generateToken(email, REFRESH_TYPE, jwtProperties.refreshSecret, REFRESH_EXP, role)
 
     fun resolveToken(req: HttpServletRequest): String? {
-        val token = req.getHeader("Authorization") ?: return null
+        val token = req.getHeader(HttpHeaders.AUTHORIZATION) ?: return null
         return parseToken(token)
     }
 
     fun exactEmailFromRefreshToken(refresh: String): String {
         return getTokenSubject(refresh, jwtProperties.refreshSecret)
     }
-
-    fun exactTypeFromRefreshToken(refresh: String): String =
-            getTokenSubject(refresh, jwtProperties.refreshSecret)
 
     fun authentication(token: String): Authentication {
         val userDetails = getLoadByUserDetail(token)
@@ -68,9 +67,8 @@ class JwtTokenProvider(
     fun generateToken(email: String, type: String, secret: Key, exp: Long, role: Role): String {
         val claims = Jwts.claims().setSubject(email)
         claims["type"] = type
-        claims["authority"] = role
+        claims[AUTHORITY] = role
         return Jwts.builder()
-                .setHeaderParam("typ", "JWT")
                 .signWith(secret, SignatureAlgorithm.HS256)
                 .setClaims(claims)
                 .setIssuedAt(Date())
@@ -96,12 +94,15 @@ class JwtTokenProvider(
             getTokenBody(token, secret).subject
 
     private fun getLoadByUserDetail(token: String): UserDetails {
-        val role: String = getTokenBody(token, jwtProperties.accessSecret).get("authority", String::class.java)
-        return when (role) {
+        return when (getTokenBody(token, jwtProperties.accessSecret).get(AUTHORITY, String::class.java)) {
             Role.CUSTOMER.name -> customDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
-            Role.COUNSELOR.name -> counselorDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
+            Role.COUNSELLOR.name -> counselorDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
             else -> throw TODO("유효하지 않은 토큰")
         }
+    }
 
+    fun socketAuthentication(parsedToken: String) : String {
+        //TODO counsellor일시 처리
+        return getTokenBody(parsedToken, jwtProperties.accessSecret).get(AUTHORITY, String::class.java)
     }
 }

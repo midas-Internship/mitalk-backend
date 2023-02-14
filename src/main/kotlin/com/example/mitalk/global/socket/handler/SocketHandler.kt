@@ -1,7 +1,9 @@
 package com.example.mitalk.global.socket.handler
 
-import com.example.mitalk.domain.counsellor.persistence.CounsellorRepository
+import com.example.mitalk.domain.auth.domain.Role
+import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.global.redis.util.CustomerQueueRedisUtils
+import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import com.example.mitalk.global.socket.message.ChatMessage
 import com.example.mitalk.global.socket.message.EnterQueueSuccessMessage
 import com.example.mitalk.global.socket.message.QueueAlreadyFilledMessage
@@ -19,22 +21,24 @@ import java.util.UUID
 
 @Component
 class SocketHandler(
-        private val mapper: ObjectMapper,
-        private val messageUtils: MessageUtils,
-        private val customerQueueRedisUtils: CustomerQueueRedisUtils,
-        private val counsellorRepository: CounsellorRepository,
-        private val sessionUtils: SessionUtils
+    private val mapper: ObjectMapper,
+    private val messageUtils: MessageUtils,
+    private val customerQueueRedisUtils: CustomerQueueRedisUtils,
+    private val counsellorRepository: CounsellorRepository,
+    private val sessionUtils: SessionUtils,
+    private val tokenProvider: JwtTokenProvider
 ) : TextWebSocketHandler() {
 
     //session connection 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        //TODO attribute 검사
-        val role = "customer"
+        val token = session.handshakeHeaders["Authorization"] ?: TODO("Authorization not found exception")
+        val resolvedToken = tokenProvider.parseToken(token[0]) ?: TODO("ERROR")
+        val role = tokenProvider.socketAuthentication(resolvedToken)
 
         //고객인 경우 -> 대기열 입력
-        if (role == "customer") {
+        if (Role.CUSTOMER.name == role) {
             customerConnectEvent(session)
-        } else if (role == "counsellor") {
+        } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
             val counsellorId = UUID.randomUUID()
             counsellorConnectionEvent(session, counsellorId)

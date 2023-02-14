@@ -1,7 +1,7 @@
 package com.example.mitalk.global.security.auth
 
+import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.customer.domain.entity.Customer
-import com.example.mitalk.global.socket.dto.Role
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails

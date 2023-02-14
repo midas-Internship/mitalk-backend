@@ -1,7 +1,5 @@
-package com.example.mitalk.global.config
+package com.example.mitalk.global.security.filter
 
-import com.example.mitalk.global.security.filter.ExceptionFilter
-import com.example.mitalk.global.security.filter.JwtTokenFilter
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter

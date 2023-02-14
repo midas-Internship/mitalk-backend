@@ -18,7 +18,4 @@ class AuthController(
     fun getNewRefreshToken(@RequestHeader("Refresh-Token") refreshToken: String): NewRefreshTokenResponse {
         return getNewRefreshTokenService.execute(refreshToken)
     }
-
-    @GetMapping("/hello")
-    fun hello(): String = "hello"
 }
