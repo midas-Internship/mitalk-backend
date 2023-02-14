@@ -22,7 +22,7 @@ class CustomController(
 //
 //    }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     fun signIn(@RequestBody() signInRequest: SignInRequest): ResponseEntity<SignInResponseDto> =
         signInService.execute(signInRequest)
             .let { ResponseEntity.ok(it) }

@@ -1,5 +1,6 @@
 package com.example.mitalk.domain.customer.service.impl
 
+import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.customer.exception.CustomerNotFoundException
 import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
@@ -18,8 +19,9 @@ class SignInServiceImpl(
 ) : SignInService {
     override fun execute(requestDto: SignInRequest): SignInResponseDto {
         val customer = customerRepository.findByEmail(requestDto.email)
-        val accessToken: String = jwtTokenProvider.generateAccessToken(requestDto.email)
-        val refreshToken: String = jwtTokenProvider.generateRefreshToken(requestDto.email)
+
+        val accessToken: String = jwtTokenProvider.generateAccessToken(requestDto.email, Role.CUSTOMER)
+        val refreshToken: String = jwtTokenProvider.generateRefreshToken(requestDto.email, Role.CUSTOMER)
         val accessExp: ZonedDateTime = jwtTokenProvider.accessExpiredTime
         val refreshExp: ZonedDateTime = jwtTokenProvider.refreshExpiredTime
 

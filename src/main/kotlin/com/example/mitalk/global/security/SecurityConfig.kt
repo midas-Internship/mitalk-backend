@@ -1,11 +1,13 @@
 package com.example.mitalk.global.security
 
+import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.global.config.FilterConfig
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.http.HttpStatus
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -34,12 +36,12 @@ class SecurityConfig(
                 .requestMatchers(RequestMatcher { request ->
                     CorsUtils.isPreFlightRequest(request)
                 }).permitAll()
-
-                .antMatchers(HttpMethod.POST, "/customer/login").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
+                .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
+//                .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
 
-                .anyRequest().denyAll()
+//                .anyRequest().denyAll()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(CustomAuthenticationEntryPoint(objectMapper))
