@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/customer")
-class CustomController(
+class CustomerController(
     private val signInService: SignInService
 ) {
 
