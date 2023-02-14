@@ -7,4 +7,5 @@ import java.util.UUID
 @Repository
 interface CounsellorRepository : MongoRepository<Counsellor, UUID> {
     fun findByStatusOrderByTodayCounsellingCountAsc(status: CounsellorStatus): List<Counsellor>
+    fun findByRoomId(roomId: UUID): Counsellor?
 }

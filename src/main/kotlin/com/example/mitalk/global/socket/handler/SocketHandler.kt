@@ -2,9 +2,11 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.counsellor.persistence.CounsellorRepository
 import com.example.mitalk.global.redis.util.CustomerQueueRedisUtils
+import com.example.mitalk.global.socket.message.ChatMessage
 import com.example.mitalk.global.socket.message.EnterQueueSuccessMessage
 import com.example.mitalk.global.socket.message.QueueAlreadyFilledMessage
-import com.example.mitalk.global.socket.util.ChatUtils
+import com.example.mitalk.global.socket.util.SessionUtils
+import com.example.mitalk.global.socket.util.MessageUtils
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
@@ -14,22 +16,20 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import java.util.UUID
-import javax.websocket.WebSocketContainer
 
 @Component
 class SocketHandler(
     private val mapper: ObjectMapper,
-    private val chatUtils: ChatUtils,
+    private val messageUtils: MessageUtils,
     private val customerQueueRedisUtils: CustomerQueueRedisUtils,
-    private val counsellorRepository: CounsellorRepository
+    private val counsellorRepository: CounsellorRepository,
+    private val sessionUtils: SessionUtils
 ) : TextWebSocketHandler() {
 
     //session connection 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionEstablished(session: WebSocketSession) {
         //TODO attribute 검사
         val role = "customer"
-
-        session.id
 
         //고객인 경우 -> 대기열 입력
         if (role == "customer") {
@@ -44,17 +44,18 @@ class SocketHandler(
 
     private fun customerConnectEvent(session: WebSocketSession) {
         if (!customerQueueRedisUtils.isQueueFull()) {
-            customerQueueRedisUtils.zAdd(session)
+            customerQueueRedisUtils.zAdd(sessionUtils.add(session))
             println("$session 큐 입력")
 
-            chatUtils.sendMessage(
-                message = EnterQueueSuccessMessage(customerQueueRedisUtils.zRank(session)),
+            println(" " + customerQueueRedisUtils.zRange(1, -1))
+            messageUtils.sendSystemMessage(
+                message = EnterQueueSuccessMessage(customerQueueRedisUtils.zRank(session.id)),
                 session = session
             )
         } else {
             println("$session 큐 입력 실패")
 
-            chatUtils.sendMessage(
+            messageUtils.sendSystemMessage(
                 message = QueueAlreadyFilledMessage(),
                 session = session
             )
@@ -64,13 +65,13 @@ class SocketHandler(
     private fun counsellorConnectionEvent(session: WebSocketSession, id: UUID) {
         val counsellor = counsellorRepository.findByIdOrNull(id) ?: TODO("throw NotFoundException")
 
-        counsellor.sessionConnectEvent(session)
+        counsellor.sessionConnectEvent(sessionUtils.add(session))
     }
 
 
     //session close 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        val removeCount = customerQueueRedisUtils.zDelete(session)
+        val removeCount = customerQueueRedisUtils.zDelete(session.id)
         println("queue에서 session $removeCount 개가 정상적으로 제거되었습니다.")
 
         println("$session 클라이언트 접속 해제 + $status")
@@ -78,13 +79,11 @@ class SocketHandler(
 
     //text message 감지-------------------------------------------------------------------------------------------
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-//        val payload = message.payload
-//        println("payload = $payload")
-//        val chatMessage = mapper.readValue(payload, ChatMessage::class.java)
-//        val room = chatService.findRoomById(chatMessage.roomId)
-//        if(room != null) {
-////            room.handleActions(session, chatMessage, chatService)
-//        } else println("room was not exist")
+        val payload = message.payload
+        val chatMessage = mapper.readValue(payload, ChatMessage::class.java)
+        val room = counsellorRepository.findByRoomId(chatMessage.roomId) ?: TODO("NotFoundException")
+
+        messageUtils.sendChatMessage(chatMessage, sessionUtils.get(room.customerSession!!), sessionUtils.get(room.counsellorSession!!))
     }
 
     //binary message 감지-------------------------------------------------------------------------------------------
