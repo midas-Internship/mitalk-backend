@@ -8,7 +8,7 @@ import java.util.UUID
 @Document("counsellor")
 data class Counsellor(
     @Id
-    val id: UUID,
+    val id: UUID? = null,
 
     @Indexed(unique = true)
     val roomId: UUID?,
