@@ -6,8 +6,8 @@ import java.time.Duration
 
 
 @Component
-class RedisUtils(
-        private val redisTemplate: RedisTemplate<String, Any>
+class CustomerQueueRedisUtils(
+        private val redisTemplate: RedisTemplate<String, String>
 ) {
 
     companion object {
@@ -45,17 +45,22 @@ class RedisUtils(
     /**
      * @desc: Sorted Set 자료형 start ~ end 까지 조회.
      */
-    fun zRange(start: Long, end: Long) = opsForZSet().range(KEY, start, end) ?: 0
+    fun zRange(start: Long, end: Long) = (opsForZSet().range(KEY, start, end) ?: emptySet()).toList()
+
+    fun zRangeAndDelete(start: Long, end: Long): List<String> {
+        val range = opsForZSet().range(KEY, start, end) ?: emptySet()
+        opsForZSet().removeRange(KEY, start, end)
+        return range.toList()
+    }
     /**
      * @desc: Sorted Set 자료형 Value의 현재위치 조회.
      */
 
-
-
     fun createTimeOutObject(key: String, value: String, timeout: Duration) = redisTemplate.opsForValue().set(key, value , timeout)
-    fun zRank(value: String) = opsForZSet().rank(KEY, value)
 
-    fun zAdd(value: Any) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
+    fun zRank(value: String) = opsForZSet().rank(KEY, value) ?: 0
 
-    fun zDelete(value: Any) = opsForZSet().remove(KEY, value)
+    fun zAdd(value: String) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
+
+    fun zDelete(value: String) = opsForZSet().remove(KEY, value)
 }
