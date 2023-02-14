@@ -4,8 +4,8 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
 
 @Component
-class RedisUtils(
-        private val redisTemplate: RedisTemplate<String, Any>
+class CustomerQueueRedisUtils(
+        private val redisTemplate: RedisTemplate<String, String>
 ) {
 
     companion object {
@@ -43,13 +43,19 @@ class RedisUtils(
     /**
      * @desc: Sorted Set 자료형 start ~ end 까지 조회.
      */
-    fun zRange(start: Long, end: Long) = opsForZSet().range(KEY, start, end) ?: 0
+    fun zRange(start: Long, end: Long) = (opsForZSet().range(KEY, start, end) ?: emptySet()).toList()
+
+    fun zRangeAndDelete(start: Long, end: Long): List<String> {
+        val range = opsForZSet().range(KEY, start, end) ?: emptySet()
+        opsForZSet().removeRange(KEY, start, end)
+        return range.toList()
+    }
     /**
      * @desc: Sorted Set 자료형 Value의 현재위치 조회.
      */
-    fun zRank(value: String) = opsForZSet().rank(KEY, value)
+    fun zRank(value: String) = opsForZSet().rank(KEY, value) ?: 0
 
-    fun zAdd(value: Any) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
+    fun zAdd(value: String) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
 
-    fun zDelete(value: Any) = opsForZSet().remove(KEY, value)
+    fun zDelete(value: String) = opsForZSet().remove(KEY, value)
 }
