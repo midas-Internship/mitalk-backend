@@ -1,5 +1,7 @@
-package com.example.mitalk.domain.counsellor.persistence
+package com.example.mitalk.domain.counsellor.domain.repository
 
+import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
+import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 import java.util.UUID

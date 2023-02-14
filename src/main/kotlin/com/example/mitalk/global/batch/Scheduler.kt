@@ -1,12 +1,11 @@
 package com.example.mitalk.global.batch
 
-import com.example.mitalk.domain.counsellor.persistence.Counsellor
-import com.example.mitalk.domain.counsellor.persistence.CounsellorRepository
-import com.example.mitalk.domain.counsellor.persistence.CounsellorStatus
+import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
+import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
+import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
 import com.example.mitalk.global.redis.util.CustomerQueueRedisUtils
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
-import com.example.mitalk.global.socket.message.element.MessageType
 import com.example.mitalk.global.socket.util.MessageUtils
 import com.example.mitalk.global.socket.util.SessionUtils
 import org.springframework.scheduling.annotation.Scheduled

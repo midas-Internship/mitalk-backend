@@ -7,7 +7,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/mitalk?serverTimezone=Asia/Seoul
     username: root
-    password: ${DB_PASSWORD}
+    password: ${DB_PASSWORD:test1234}
   redis:
     host: localhost
     port: 6379
@@ -19,11 +19,6 @@ spring:
     sql:
       init:
         mode: always
-  #  data:
-  #    mongodb:
-  #      host: localhost
-  #      port: 27017
-  #      database: tutorial
   jpa:
     hibernate:
       ddl-auto: update
@@ -31,26 +26,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 jwt:
   accessSecret: KhheB0euerVivwCL7P1WA0CL/N8Dt6EyQEa/Wi1XLaY5beneRnADC4KUQ+PAxMUBk8JuJvFl9mWk7zfkoNWlmA==
   refreshSecret: RGNVNSDJAdDVhbGRvb2HzJEAjIQ==Wi1XLaY5beneRnADC4KUQ+PAxMUBk8J
-#spring:
-#  r2dbc:
-#    url: ${DB_URL}
-#    username: ${DB_USERNAME:root}
-#    password: ${DB_PASSWORD:cos1234}
-#    pool:
-#      max-size: 100
-#      validation-query: SELECT 1
-#  data:
-#    mongodb:
-#      host: ${DB_HOST:localhost}
-#      port: ${DB_PORT:27017}
-#      database: ${DB_DATABASE:test}
-#  sql:
-#    init:
-#      mode: always
-#
-#logging:
-#  level:
 

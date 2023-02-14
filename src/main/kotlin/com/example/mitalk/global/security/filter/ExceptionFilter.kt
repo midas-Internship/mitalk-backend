@@ -38,7 +38,7 @@ class ExceptionFilter(
 
     private fun sendError(res: HttpServletResponse, errorCode: ErrorCode) {
         val errorResponse = ErrorResponse(errorCode.message, errorCode.status)
-        val responseString = objectMapper!!.writeValueAsString(errorResponse)
+        val responseString = objectMapper.writeValueAsString(errorResponse)
         res.status = errorCode.status
         res.contentType = MediaType.APPLICATION_JSON_VALUE
         res.writer.write(responseString)
