@@ -76,7 +76,14 @@ class SocketHandler(
     //session close 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         val removeCount = customerQueueRedisUtils.zDelete(session.id)
-        println("queue에서 session $removeCount 개가 정상적으로 제거되었습니다.")
+        if (removeCount == 0L) { //상담원이 나갔을때
+            val counsellor = counsellorRepository.findByCounsellorSession(session.id)
+
+        } else { //사용자가 나갔을때
+            val counsellor = counsellorRepository.findByCustomerSession(session.id)
+            //TODO 메일로 발송
+            println("sessionFactory에서 session $removeCount 개가 정상적으로 제거되었습니다.")
+        }
 
         println("$session 클라이언트 접속 해제 + $status")
     }

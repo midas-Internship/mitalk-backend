@@ -62,5 +62,5 @@ class CustomerQueueRedisUtils(
 
     fun zAdd(value: String) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
 
-    fun zDelete(value: String) = opsForZSet().remove(KEY, value)
+    fun zDelete(value: String) = opsForZSet().remove(KEY, value) ?: 0
 }
