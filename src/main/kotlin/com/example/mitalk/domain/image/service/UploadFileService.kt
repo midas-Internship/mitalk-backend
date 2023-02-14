@@ -37,7 +37,7 @@ class UploadFileService(
                                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 )
             }
-        } catch (e: MaxUploadSizeExceededException) {
+        } catch (e: RuntimeException) {
             throw MaximerFileSizeException()
         }
         result = url + fileName
