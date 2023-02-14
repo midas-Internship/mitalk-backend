@@ -2,6 +2,8 @@ package com.example.mitalk.global.redis.util
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
+import java.time.Duration
+
 
 @Component
 class CustomerQueueRedisUtils(
@@ -53,6 +55,9 @@ class CustomerQueueRedisUtils(
     /**
      * @desc: Sorted Set 자료형 Value의 현재위치 조회.
      */
+
+    fun createTimeOutObject(key: String, value: String, timeout: Duration) = redisTemplate.opsForValue().set(key, value , timeout)
+
     fun zRank(value: String) = opsForZSet().rank(KEY, value) ?: 0
 
     fun zAdd(value: String) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())

@@ -19,11 +19,11 @@ import java.util.UUID
 
 @Component
 class SocketHandler(
-    private val mapper: ObjectMapper,
-    private val messageUtils: MessageUtils,
-    private val customerQueueRedisUtils: CustomerQueueRedisUtils,
-    private val counsellorRepository: CounsellorRepository,
-    private val sessionUtils: SessionUtils
+        private val mapper: ObjectMapper,
+        private val messageUtils: MessageUtils,
+        private val customerQueueRedisUtils: CustomerQueueRedisUtils,
+        private val counsellorRepository: CounsellorRepository,
+        private val sessionUtils: SessionUtils
 ) : TextWebSocketHandler() {
 
     //session connection 감지-------------------------------------------------------------------------------------------
@@ -49,15 +49,15 @@ class SocketHandler(
 
             println(" " + customerQueueRedisUtils.zRange(1, -1))
             messageUtils.sendSystemMessage(
-                message = EnterQueueSuccessMessage(customerQueueRedisUtils.zRank(session.id)),
-                session = session
+                    message = EnterQueueSuccessMessage(customerQueueRedisUtils.zRank(session.id)),
+                    session = session
             )
         } else {
             println("$session 큐 입력 실패")
 
             messageUtils.sendSystemMessage(
-                message = QueueAlreadyFilledMessage(),
-                session = session
+                    message = QueueAlreadyFilledMessage(),
+                    session = session
             )
         }
     }

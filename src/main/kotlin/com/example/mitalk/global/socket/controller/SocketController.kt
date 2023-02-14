@@ -14,6 +14,9 @@ class SocketController(
 
 //    @PostMapping
 //    fun createRoom(@RequestParam name: String) = chatService.createRoom(name)
+
+//    @GetMapping
+//    fun findAllRoom() = chatService.findAllRoom()
 //
 //    @GetMapping
 //    fun findAllRoom() = chatService.findAllRoom()
