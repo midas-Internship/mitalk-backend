@@ -1,15 +1,22 @@
 server:
+  tomcat:
+    max-swallow-size: 2024MB
   port: 8080
   shutdown: graceful
+  address: 192.168.0.6
 
 spring:
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 1MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mitalk?serverTimezone=Asia/Seoul
+    url: ${DB_URL}
     username: root
     password: ${DB_PASSWORD:test1234}
   redis:
-    host: localhost
+    host: ${REDIS_HOST:localhost}
     port: 6379
   data:
     mongodb:
@@ -31,4 +38,17 @@ spring:
 jwt:
   accessSecret: KhheB0euerVivwCL7P1WA0CL/N8Dt6EyQEa/Wi1XLaY5beneRnADC4KUQ+PAxMUBk8JuJvFl9mWk7zfkoNWlmA==
   refreshSecret: RGNVNSDJAdDVhbGRvb2HzJEAjIQ==Wi1XLaY5beneRnADC4KUQ+PAxMUBk8J
+cloud:
+  aws:
+    stack:
+      auto: false
+    s3:
+      bucket: mitalk-s3
+      url: https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/
+    region:
+      static: ap-northeast-2
+      auto: false
+    credentials:
+      access-Key: ${AWS_ACCESS_KEY}
+      secret-Key: ${AWS_SECRET_KEY}
 
