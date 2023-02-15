@@ -21,7 +21,7 @@ spring:
 #      host: ${MONGO_DB_HOST:localhost}
 #      port: ${MONGO_DB_PORT:27017}
 #      database: ${MONGO_DB_DATABASE:test}
-      uri: mongodb://mongo:27017/test
+      uri: ${MONGO_DB_URI}
     sql:
       init:
         mode: always
