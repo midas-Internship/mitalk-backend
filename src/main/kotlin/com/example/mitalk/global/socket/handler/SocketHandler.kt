@@ -5,6 +5,7 @@ import com.example.mitalk.domain.counsellor.domain.repository.CounsellorReposito
 import com.example.mitalk.domain.customer.domain.entity.CustomerIdHash
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerIdHashRepository
+import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.record.domain.entity.MessageRecord
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
@@ -35,7 +36,8 @@ class SocketHandler(
     private val sessionUtils: SessionUtils,
     private val tokenProvider: JwtTokenProvider,
     private val customerIdHashRepository: CustomerIdHashRepository,
-    private val recordRepository: RecordRepository
+    private val recordRepository: RecordRepository,
+    private val customerRepository: CustomerRepository
 ) : TextWebSocketHandler() {
 
 //    @Value("\${cloud.aws.s3.url}")
@@ -53,11 +55,11 @@ class SocketHandler(
 
         //고객인 경우 -> 대기열 세션 입력
         if (Role.CUSTOMER.name == role) {
-            customerConnectEvent(session, UUID.fromString(id))
+            customerConnectEvent(session, customerRepository.findByEmail(id)!!.id)
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
-            counsellorConnectionEvent(session, UUID.fromString(id))
+            counsellorConnectionEvent(session, UUID.randomUUID())
         }
 
     }
