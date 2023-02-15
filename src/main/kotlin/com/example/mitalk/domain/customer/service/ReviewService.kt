@@ -18,7 +18,7 @@ class ReviewService(
 ) {
     fun execute(requestDto: ReviewRequest) {
         if (requestDto.star != null && requestDto.message != null) {
-            val review = Review(0, requestDto.star, requestDto.message)
+            val review = Review(0, requestDto.star, requestDto.message, requestDto.counsellor)
             val reviewId = reviewRepository.save(review).id
 
             reviewElementRepository.saveAll(
