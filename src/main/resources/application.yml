@@ -18,10 +18,10 @@ spring:
     port: 6379
   data:
     mongodb:
-#      host: ${MONGO_DB_HOST:localhost}
-#      port: ${MONGO_DB_PORT:27017}
-#      database: ${MONGO_DB_DATABASE:test}
-#      uri: ${MONGO_DB_URI}
+      host: ${MONGO_DB_HOST:localhost}
+      port: ${MONGO_DB_PORT:27017}
+      database: ${MONGO_DB_DATABASE:test}
+      uri: ${MONGO_DB_URI}
 
     sql:
       init:
