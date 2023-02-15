@@ -22,6 +22,7 @@ class CustomerUtil(
                 picture = request.profileImg,
                 role = Role.CUSTOMER
         )
+
         customerRepository.save(customer)
 
         val refreshToken = RefreshToken(
