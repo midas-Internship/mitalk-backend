@@ -80,7 +80,8 @@ class Scheduler(
     private fun sendCurrentQueueOrder() {
         if (customerQueue.zSize() < 1) return;
 
-        customerQueue.zRange(1, -1).forEachIndexed {
+        println(" " + customerQueue.zRange(0, -1))
+        customerQueue.zRange(0, -1).forEachIndexed {
                 index, s -> messageUtils.sendSystemMessage(CurrentQueueMessage(index + 1L), sessionUtils.get(s))
         }
     }

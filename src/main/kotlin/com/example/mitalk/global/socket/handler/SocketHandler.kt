@@ -68,7 +68,6 @@ class SocketHandler(
             customerQueue.zAdd(sessionUtils.add(session))
             println("$session 큐 입력")
 
-            println(" " + customerQueue.zRange(1, -1))
             messageUtils.sendSystemMessage(
                 message = EnterQueueSuccessMessage(customerQueue.zRank(session.id)),
                 session = session

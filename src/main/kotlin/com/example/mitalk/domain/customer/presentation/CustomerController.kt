@@ -2,6 +2,7 @@ package com.example.mitalk.domain.customer.presentation
 
 import com.example.mitalk.domain.customer.presentation.data.request.ReviewRequest
 import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
+import com.example.mitalk.domain.customer.presentation.data.response.CurrentStatusResponse
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
 import com.example.mitalk.domain.customer.service.ReviewService
 import com.example.mitalk.domain.customer.service.SignInService
@@ -28,7 +29,7 @@ class CustomerController(
 
 
     @GetMapping("/review")
-    fun currentStatus() = userUtil.getCurrentCustomer().needReview
+    fun currentStatus(): CurrentStatusResponse = CurrentStatusResponse(userUtil.getCurrentCustomer().needReview)
 
     @PostMapping("/review")
     fun createReview(@RequestBody reviewRequest: ReviewRequest) {
