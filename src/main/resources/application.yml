@@ -21,6 +21,7 @@ spring:
       host: ${MONGO_DB_HOST:localhost}
       port: ${MONGO_DB_PORT:27017}
       database: ${MONGO_DB_DATABASE:test}
+      password: ${MONGO_DB_PASSWORD}
     sql:
       init:
         mode: always
