@@ -18,16 +18,7 @@ data class Record(
     val counsellorId: UUID,
 
     val messageRecords: MutableList<MessageRecord> = mutableListOf()
-) {
-    fun record(sender: Role, isFile: Boolean, data: String) {
-        val messageRecord = MessageRecord(sender, isFile,
-            isDeleted = false,
-            isUpdated = false,
-            dataMap = linkedMapOf(data to LocalDateTime.now())
-        )
-        messageRecords.add(messageRecord)
-    }
-}
+)
 
 data class MessageRecord(
     val sender: Role,
@@ -40,6 +31,14 @@ data class MessageRecord(
 
     val dataMap: LinkedHashMap<String, LocalDateTime>
 ) {
+
+    fun record(sender: Role, isFile: Boolean, data: String): MessageRecord {
+        return MessageRecord(sender, isFile,
+            isDeleted = false,
+            isUpdated = false,
+            dataMap = linkedMapOf(data to LocalDateTime.now())
+        )
+    }
 
     fun updateData(data: String): MessageRecord {
         if (isDeleted) {

@@ -7,6 +7,7 @@ import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import com.example.mitalk.global.socket.message.ChatMessage
 import com.example.mitalk.global.socket.message.EnterQueueSuccessMessage
 import com.example.mitalk.global.socket.message.QueueAlreadyFilledMessage
+import com.example.mitalk.global.socket.message.RoomBurstEventMessage
 import com.example.mitalk.global.socket.util.SessionUtils
 import com.example.mitalk.global.socket.util.MessageUtils
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -69,7 +70,9 @@ class SocketHandler(
     private fun counsellorConnectionEvent(session: WebSocketSession, id: UUID) {
         val counsellor = counsellorRepository.findByIdOrNull(id) ?: TODO("throw NotFoundException")
 
-        counsellor.sessionConnectEvent(sessionUtils.add(session))
+        counsellorRepository.save(
+            counsellor.sessionConnectEvent(sessionUtils.add(session))
+        )
     }
 
 
@@ -77,11 +80,16 @@ class SocketHandler(
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         val removeCount = customerQueueRedisUtils.zDelete(session.id)
         if (removeCount == 0L) { //상담원이 나갔을때
-            val counsellor = counsellorRepository.findByCounsellorSession(session.id)
+            val counsellor = counsellorRepository.findByCounsellorSession(session.id)!!
+            counsellor.customerSession ?: return
 
+            counsellorRepository.save(counsellor.roomCloseEvent())
+            messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
         } else { //사용자가 나갔을때
-            val counsellor = counsellorRepository.findByCustomerSession(session.id)
-            //TODO 메일로 발송
+            val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return
+            //TODO ses 메일로 발송
+            counsellorRepository.save(counsellor.roomCloseEvent())
+            messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
             println("sessionFactory에서 session $removeCount 개가 정상적으로 제거되었습니다.")
         }
 

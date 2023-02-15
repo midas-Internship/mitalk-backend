@@ -3,6 +3,7 @@ package com.example.mitalk.global.batch
 import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
+import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.redis.util.CustomerQueueRedisUtils
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
@@ -17,7 +18,8 @@ class Scheduler(
     private val counsellorRepository: CounsellorRepository,
     private val customerQueueRedisUtils: CustomerQueueRedisUtils,
     private val messageUtils: MessageUtils,
-    private val sessionUtils: SessionUtils
+    private val sessionUtils: SessionUtils,
+    private val recordRepository: RecordRepository
 ) {
 
     @Scheduled(cron = "*/7 * * * * *")
@@ -53,10 +55,12 @@ class Scheduler(
                 val roomId = UUID.randomUUID()
                 val message = CounsellingStartMessage(roomId)
 
-               a.counsellingEvent(roomId, b)
+               counsellorRepository.save(
+                   a.counsellingEvent(roomId, b)
+               )
 
                 messageUtils.sendSystemMessage(message, sessionUtils.get(a.counsellorSession!!))
-                messageUtils.sendSystemMessage(message, sessionUtils.get(a.customerSession!!))
+                messageUtils.sendSystemMessage(message, sessionUtils.get(b))
             }
         }
     }

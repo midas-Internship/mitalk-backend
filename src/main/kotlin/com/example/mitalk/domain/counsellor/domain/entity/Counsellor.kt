@@ -22,14 +22,17 @@ data class Counsellor(
     val status: CounsellorStatus = CounsellorStatus.OFFLINE
 ) {
     fun sessionConnectEvent(counsellorSession: String) = Counsellor(
-            id, roomId, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.ONLINE
+        id, roomId, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.ONLINE
     )
 
     fun counsellingEvent(temporaryId: UUID, customerSession: String) = Counsellor(
         id, temporaryId, counsellorSession, customerSession, todayCounsellingCount.plus(1), CounsellorStatus.COUNSELLING
     )
-}
 
+    fun roomCloseEvent() = Counsellor(
+        id, roomId = null, counsellorSession, null, todayCounsellingCount, CounsellorStatus.OFFLINE
+    )
+}
 enum class CounsellorStatus{
     OFFLINE, ONLINE, COUNSELLING
 }
