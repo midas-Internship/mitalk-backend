@@ -1,4 +1,4 @@
-package com.example.mitalk.global.redis.util
+package com.example.mitalk.domain.customer.domain.entity
 
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Component
@@ -6,7 +6,7 @@ import java.time.Duration
 
 
 @Component
-class CustomerQueueRedisUtils(
+class CustomerQueue(
         private val redisTemplate: RedisTemplate<String, String>
 ) {
 
@@ -62,5 +62,5 @@ class CustomerQueueRedisUtils(
 
     fun zAdd(value: String) = opsForZSet().add(KEY, value, System.currentTimeMillis().toDouble())
 
-    fun zDelete(value: String) = opsForZSet().remove(KEY, value)
+    fun zDelete(value: String) = opsForZSet().remove(KEY, value) ?: 0
 }

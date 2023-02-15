@@ -10,4 +10,6 @@ import java.util.UUID
 interface CounsellorRepository : MongoRepository<Counsellor, UUID> {
     fun findByStatusOrderByTodayCounsellingCountAsc(status: CounsellorStatus): List<Counsellor>
     fun findByRoomId(roomId: UUID): Counsellor?
+    fun findByCounsellorSession(counsellor: String): Counsellor?
+    fun findByCustomerSession(customer: String): Counsellor?
 }

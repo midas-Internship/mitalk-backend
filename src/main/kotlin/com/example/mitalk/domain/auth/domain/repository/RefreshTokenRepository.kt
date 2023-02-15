@@ -1,6 +1,6 @@
-package com.example.mitalk.domain.customer.domain.repository
+package com.example.mitalk.domain.auth.domain.repository
 
-import com.example.mitalk.domain.customer.domain.entity.RefreshToken
+import com.example.mitalk.domain.auth.domain.entity.RefreshToken
 import org.springframework.data.repository.CrudRepository
 import java.util.*
 

@@ -21,5 +21,4 @@ class Customer(
 
         @Enumerated(EnumType.STRING)
         val role: Role
-) {
-}
+)

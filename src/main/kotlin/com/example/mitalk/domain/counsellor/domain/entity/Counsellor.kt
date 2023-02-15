@@ -8,7 +8,7 @@ import java.util.UUID
 @Document("counsellor")
 data class Counsellor(
     @Id
-    val id: UUID,
+    val id: UUID? = null,
 
     @Indexed(unique = true)
     val roomId: UUID?,
@@ -22,14 +22,17 @@ data class Counsellor(
     val status: CounsellorStatus = CounsellorStatus.OFFLINE
 ) {
     fun sessionConnectEvent(counsellorSession: String) = Counsellor(
-            id, roomId, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.ONLINE
+        id, roomId, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.ONLINE
     )
 
     fun counsellingEvent(temporaryId: UUID, customerSession: String) = Counsellor(
         id, temporaryId, counsellorSession, customerSession, todayCounsellingCount.plus(1), CounsellorStatus.COUNSELLING
     )
-}
 
+    fun roomCloseEvent() = Counsellor(
+        id, roomId = null, counsellorSession, null, todayCounsellingCount, CounsellorStatus.OFFLINE
+    )
+}
 enum class CounsellorStatus{
     OFFLINE, ONLINE, COUNSELLING
 }
