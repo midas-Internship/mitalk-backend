@@ -20,7 +20,7 @@ spring:
     port: 6379
   data:
     mongodb:
-      host: ${DB_HOST:54.180.133.255}
+      host: ${DB_HOST:localhost}
       port: ${DB_PORT:27017}
       database: ${DB_DATABASE:test}
     sql:
