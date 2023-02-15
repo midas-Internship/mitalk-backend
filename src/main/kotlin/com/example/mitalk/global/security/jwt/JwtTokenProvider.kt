@@ -101,8 +101,8 @@ class JwtTokenProvider(
         }
     }
 
-    fun socketAuthentication(parsedToken: String) : String {
+    fun socketAuthentication(parsedToken: String) : Claims {
         //TODO counsellor일시 처리
-        return getTokenBody(parsedToken, jwtProperties.accessSecret).get(AUTHORITY, String::class.java)
+        return getTokenBody(parsedToken, jwtProperties.accessSecret)
     }
 }

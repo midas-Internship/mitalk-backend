@@ -11,11 +11,12 @@ import java.time.ZonedDateTime
 
 @Service
 class SignInService(
-        private val jwtTokenProvider: JwtTokenProvider,
-        private val customerRepository: CustomerRepository,
-        private val customerUtil: CustomerUtil
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val customerRepository: CustomerRepository,
+    private val customerUtil: CustomerUtil
 ) {
     fun execute(requestDto: SignInRequest): SignInResponseDto {
+
         val customer = customerRepository.findByEmail(requestDto.email)
 
         val accessToken: String = jwtTokenProvider.generateAccessToken(requestDto.email, Role.CUSTOMER)
