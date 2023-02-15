@@ -17,6 +17,6 @@ class Review(
 
         val message: String? = null,
 
-        val counsellor: UUID
+        val counsellor: UUID? = null
 ) {
 }

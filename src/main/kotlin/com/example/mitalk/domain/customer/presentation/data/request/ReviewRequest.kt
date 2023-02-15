@@ -7,6 +7,6 @@ class ReviewRequest(
         val star: Int?,
         val message: String?,
         val reviewItem: List<ReviewItem>,
-        val counsellor: UUID
+        val counsellor: UUID?
 ) {
 }
