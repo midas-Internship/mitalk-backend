@@ -1,5 +1,6 @@
 package com.example.mitalk.domain.customer.presentation
 
+import com.example.mitalk.domain.customer.presentation.data.request.ReviewRequest
 import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
 import com.example.mitalk.domain.customer.service.SignInService
@@ -12,16 +13,16 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/customer")
 class CustomerController(
-    private val signInService: SignInService
+        private val signInService: SignInService,
 ) {
 
     @PostMapping("/signin")
-    fun signIn(@RequestBody() signInRequest: SignInRequest): ResponseEntity<SignInResponseDto> =
-        signInService.execute(signInRequest)
-            .let { ResponseEntity.ok(it) }
+    fun signIn(@RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponseDto> =
+            signInService.execute(signInRequest)
+                    .let { ResponseEntity.ok(it) }
 
     @PostMapping("/review")
-    fun createReview() {
+    fun createReview(@RequestBody reviewRequest: ReviewRequest) {
 
     }
 }

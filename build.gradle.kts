@@ -45,6 +45,7 @@ dependencies {
     implementation("org.springframework.session:spring-session-data-redis:2.4.2")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.1.2")
     runtimeOnly("com.mysql:mysql-connector-j")
 
     //auth

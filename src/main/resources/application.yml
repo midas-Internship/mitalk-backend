@@ -2,6 +2,7 @@ server:
   tomcat:
     max-swallow-size: 2024MB
   shutdown: graceful
+  address: 192.168.0.6
 
 spring:
   servlet:
@@ -9,7 +10,7 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: ${DB_DRIVER}
     url: ${DB_URL}
     username: root
     password: ${DB_PASSWORD:test1234}
@@ -18,9 +19,9 @@ spring:
     port: 6379
   data:
     mongodb:
-      host: ${DB_HOST:localhost}
-      port: ${DB_PORT:27017}
-      database: ${DB_DATABASE:test}
+      host: ${MONGO_DB_HOST:localhost}
+      port: ${MONGO_DB_PORT:27017}
+      database: ${MONGO_DB_DATABASE:test}
     sql:
       init:
         mode: always
