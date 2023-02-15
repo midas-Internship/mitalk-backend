@@ -23,9 +23,8 @@ class UploadFileService(
     lateinit var url: String
 
     fun execute(dto: MultipartFile): FileDto {
-        var result = ""
-        println("bytes 사이즈 " + dto.bytes.size)
-        val fileName = createFileName()
+        var result: String = ""
+        val fileName = createFileName(dto)
         val objectMetadata = ObjectMetadata()
         objectMetadata.contentLength = dto.size
         objectMetadata.contentType = dto.contentType
@@ -42,12 +41,12 @@ class UploadFileService(
                 is MaxUploadSizeExceededException -> throw MaximerFileSizeException()
             }
         }
-        result = url + fileName
+        result = amazonS3.getUrl(bucket, fileName).toString()
         return FileDto(file = result)
     }
 
 }
 
-private fun createFileName(): String {
-    return UUID.randomUUID().toString()
+private fun createFileName(multipartFile: MultipartFile): String {
+    return "${UUID.randomUUID()}-${multipartFile.originalFilename}"
 }

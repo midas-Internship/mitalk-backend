@@ -21,14 +21,14 @@ class SecurityConfig(
 ) {
     @Bean
     protected fun filterChain(http: HttpSecurity): SecurityFilterChain {
-            http
+        http
                 .cors().and()
                 .csrf().disable()
-            http
+        http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-            http
+        http
                 .authorizeRequests()
                 .requestMatchers(RequestMatcher { request ->
                     CorsUtils.isPreFlightRequest(request)
@@ -38,6 +38,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
+                .antMatchers(HttpMethod.GET, "/customer/review").authenticated()
 
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
@@ -52,7 +53,7 @@ class SecurityConfig(
                 .and()
                 .apply(FilterConfig(jwtTokenProvider, objectMapper))
 
-            return http.build()
+        return http.build()
     }
 
 }

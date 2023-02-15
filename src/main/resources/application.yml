@@ -50,3 +50,9 @@ cloud:
       access-Key: ${AWS_ACCESS_KEY}
       secret-Key: ${AWS_SECRET_KEY}
 
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
