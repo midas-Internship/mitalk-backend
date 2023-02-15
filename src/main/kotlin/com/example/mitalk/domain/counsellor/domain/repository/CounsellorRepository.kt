@@ -12,4 +12,5 @@ interface CounsellorRepository : MongoRepository<Counsellor, UUID> {
     fun findByRoomId(roomId: UUID): Counsellor?
     fun findByCounsellorSession(counsellor: String): Counsellor?
     fun findByCustomerSession(customer: String): Counsellor?
+
 }

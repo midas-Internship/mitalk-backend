@@ -1,5 +1,6 @@
 package com.example.mitalk.domain.customer.service
 
+import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.domain.entity.Review
 import com.example.mitalk.domain.customer.domain.entity.ReviewElement
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
@@ -14,7 +15,7 @@ class ReviewService(
         private val reviewRepository: ReviewRepository,
         private val reviewElementRepository: ReviewElementRepository,
         private val userUtil: UserUtil,
-        private val customerRepository: CustomerRepository
+        private val customerRepository: CustomerRepository,
 ) {
     fun execute(requestDto: ReviewRequest) {
         if (requestDto.star != null && requestDto.message != null) {
@@ -30,6 +31,7 @@ class ReviewService(
 
         val customer = userUtil.getCurrentCustomer()
         customer.needReview = null
+
         customerRepository.save(customer)
     }
 }

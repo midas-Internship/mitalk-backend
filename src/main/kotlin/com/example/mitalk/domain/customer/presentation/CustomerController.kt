@@ -4,6 +4,7 @@ import com.example.mitalk.domain.customer.presentation.data.request.ReviewReques
 import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
 import com.example.mitalk.domain.customer.presentation.data.response.CurrentStatusResponse
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
+import com.example.mitalk.domain.customer.service.CurrentStatusService
 import com.example.mitalk.domain.customer.service.ReviewService
 import com.example.mitalk.domain.customer.service.SignInService
 import com.example.mitalk.global.util.UserUtil
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/customer")
 class CustomerController(
         private val signInService: SignInService,
-        private val userUtil: UserUtil,
+        private val currentStatusService: CurrentStatusService,
         private val reviewService: ReviewService
 ) {
 
@@ -29,7 +30,7 @@ class CustomerController(
 
 
     @GetMapping("/review")
-    fun currentStatus(): CurrentStatusResponse = CurrentStatusResponse(userUtil.getCurrentCustomer().needReview)
+    fun currentStatus(): CurrentStatusResponse = currentStatusService.execute()
 
     @PostMapping("/review")
     fun createReview(@RequestBody reviewRequest: ReviewRequest) {
