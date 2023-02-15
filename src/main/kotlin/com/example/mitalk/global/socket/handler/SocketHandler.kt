@@ -38,10 +38,9 @@ class SocketHandler(
     private val recordRepository: RecordRepository
 ) : TextWebSocketHandler() {
 
-//    @Value("\${cloud.aws.s3.url}")
-//    lateinit var fileIdentification: String
+    @Value("\${cloud.aws.s3.url}")
+    lateinit var fileIdentification: String
 
-    val fileIdentification = "asdsas"
     //session connection 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionEstablished(session: WebSocketSession) {
         val token = session.handshakeHeaders["Authorization"] ?: TODO("Authorization not found exception")
