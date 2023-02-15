@@ -1,13 +1,10 @@
 package com.example.mitalk.global.socket.message
 
+import com.example.mitalk.domain.auth.domain.Role
 import java.util.UUID
 
 class ChatMessage(
     val roomId: UUID,
-    val role: MessageRole,
+    val role: Role,
     val message: String
 )
-
-enum class MessageRole {
-    CUSTOMER, COUNSELLOR
-}

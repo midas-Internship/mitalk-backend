@@ -9,16 +9,23 @@ import java.util.UUID
 @Document("record")
 data class Record(
     @Id
-    val id: UUID? = null,
+    val id: UUID,
 
-    val startAt: LocalDateTime,
+    val startAt: LocalDateTime = LocalDateTime.now(),
 
     val customerId: UUID,
 
     val counsellorId: UUID,
 
     val messageRecords: MutableList<MessageRecord> = mutableListOf()
-)
+) {
+    fun add(messageRecord: MessageRecord): Record {
+        messageRecords.add(messageRecord)
+        return Record(
+            id, startAt, customerId, counsellorId, messageRecords
+        )
+    }
+}
 
 data class MessageRecord(
     val sender: Role,
@@ -31,14 +38,6 @@ data class MessageRecord(
 
     val dataMap: LinkedHashMap<String, LocalDateTime>
 ) {
-
-    fun record(sender: Role, isFile: Boolean, data: String): MessageRecord {
-        return MessageRecord(sender, isFile,
-            isDeleted = false,
-            isUpdated = false,
-            dataMap = linkedMapOf(data to LocalDateTime.now())
-        )
-    }
 
     fun updateData(data: String): MessageRecord {
         if (isDeleted) {

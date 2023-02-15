@@ -3,8 +3,10 @@ package com.example.mitalk.global.batch
 import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
+import com.example.mitalk.domain.record.domain.entity.Record
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
-import com.example.mitalk.global.redis.util.CustomerQueueRedisUtils
+import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
+import com.example.mitalk.domain.customer.domain.repository.CustomerIdHashRepository
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
 import com.example.mitalk.global.socket.util.MessageUtils
@@ -16,10 +18,11 @@ import java.util.*
 @Component
 class Scheduler(
     private val counsellorRepository: CounsellorRepository,
-    private val customerQueueRedisUtils: CustomerQueueRedisUtils,
+    private val customerQueue: CustomerQueue,
     private val messageUtils: MessageUtils,
     private val sessionUtils: SessionUtils,
-    private val recordRepository: RecordRepository
+    private val recordRepository: RecordRepository,
+    private val customerIdHashRepository: CustomerIdHashRepository
 ) {
 
     @Scheduled(cron = "*/7 * * * * *")
@@ -33,18 +36,18 @@ class Scheduler(
         }
 
         val counsellorSize = counsellorList.size
-        val customerSize = customerQueueRedisUtils.zSize()
+        val customerSize = customerQueue.zSize()
 
         if (counsellorSize > customerSize) {
             connection(
                 counsellorList = counsellorList.subList(0, customerSize.toInt()),
-                customerList = customerQueueRedisUtils.zRangeAndDelete(1, customerSize)
+                customerList = customerQueue.zRangeAndDelete(1, customerSize)
             )
         }
         else {
             connection(
                 counsellorList = counsellorList,
-                customerList = customerQueueRedisUtils.zRangeAndDelete(1, counsellorSize.toLong())
+                customerList = customerQueue.zRangeAndDelete(1, counsellorSize.toLong())
             )
         }
         sendCurrentQueueOrder()
@@ -52,23 +55,32 @@ class Scheduler(
 
     private fun connection(counsellorList: List<Counsellor>, customerList: List<String>) {
         counsellorList.zip(customerList) { a: Counsellor, b: String -> {
-                val roomId = UUID.randomUUID()
-                val message = CounsellingStartMessage(roomId)
+            val roomId = UUID.randomUUID()
+            val message = CounsellingStartMessage(roomId)
 
-               counsellorRepository.save(
-                   a.counsellingEvent(roomId, b)
-               )
+            counsellorRepository.save(
+                a.counsellingEvent(roomId, b)
+            )
 
-                messageUtils.sendSystemMessage(message, sessionUtils.get(a.counsellorSession!!))
-                messageUtils.sendSystemMessage(message, sessionUtils.get(b))
-            }
+            recordRepository.save(
+                Record(
+                    id = roomId,
+                    customerId = customerIdHashRepository.findByCustomerSessionId(b)!!.customerId,
+                    counsellorId = a.id!!
+                )
+            )
+
+            messageUtils.sendSystemMessage(message, sessionUtils.get(a.counsellorSession!!))
+            messageUtils.sendSystemMessage(message, sessionUtils.get(b))
+        }
+
         }
     }
 
     private fun sendCurrentQueueOrder() {
-        if (customerQueueRedisUtils.zSize() < 1) return;
+        if (customerQueue.zSize() < 1) return;
 
-        customerQueueRedisUtils.zRange(1, -1).forEachIndexed {
+        customerQueue.zRange(1, -1).forEachIndexed {
                 index, s -> messageUtils.sendSystemMessage(CurrentQueueMessage(index + 1L), sessionUtils.get(s))
         }
     }
