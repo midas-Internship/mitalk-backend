@@ -45,8 +45,8 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/customer/review").hasAuthority(Role.CUSTOMER.name)
 
                 // admin
-                .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
-                .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
+                .antMatchers(HttpMethod.POST, "/admin/counsellor").authenticated()
 
                 // auth
                 .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)
