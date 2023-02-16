@@ -20,6 +20,11 @@ class AuthController(
         private val officeService: SignInOfficeService
 ) {
 
+    @GetMapping("/hello")
+    fun checkRole(): String {
+        return "role"
+    }
+
     @PatchMapping
     fun getNewRefreshToken(@RequestHeader("Refresh-Token") refreshToken: String): NewRefreshTokenResponse {
         return getNewRefreshTokenService.execute(refreshToken)

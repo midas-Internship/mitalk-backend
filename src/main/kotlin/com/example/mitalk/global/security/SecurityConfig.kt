@@ -48,7 +48,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").authenticated()
 
                 // auth
-                .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.GET,"/auth/hello").hasAuthority(Role.COUNSELLOR.name)
                 .antMatchers(HttpMethod.POST, "/auth/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()

@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails
 class CounsellorDetails(
         private val counsellor: Counsellor
 ) : UserDetails {
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> = mutableListOf(SimpleGrantedAuthority(Role.CUSTOMER.name))
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> = mutableListOf(SimpleGrantedAuthority(Role.COUNSELLOR.name))
 
     override fun getPassword(): String? = null
 
