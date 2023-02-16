@@ -52,7 +52,7 @@ class SignInOfficeService(
         val admin = adminRepository.findByIdOrNull(id)
 
         if(counsellor != null) {
-            generatedOfficeToken(counsellor.id)
+            return generatedOfficeToken(counsellor.id)
         }
         else if(admin != null) {
             return generatedOfficeToken(admin.id)
