@@ -28,7 +28,7 @@ class RecordController(
 
     @GetMapping("/counsellor/record")
     fun getRecordByCounsellor(): GetRecordResponse {
-        val counsellorId = userUtil.getCounsellorCustomer().id
+        val counsellorId = userUtil.getCurrentCounsellor().id
         val record = recordRepository.findByCounsellorId(counsellorId)
         return getRecordService.execute(record)
     }
