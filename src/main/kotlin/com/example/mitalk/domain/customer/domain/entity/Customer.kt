@@ -20,7 +20,4 @@ class Customer(
         val picture: String,
 
         var needReview: UUID? = null,
-
-        @Enumerated(EnumType.STRING)
-        val role: Role
 )
