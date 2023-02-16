@@ -1,6 +1,5 @@
 package com.example.mitalk.domain.customer.service
 
-import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.domain.entity.Review
 import com.example.mitalk.domain.customer.domain.entity.ReviewElement
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository

@@ -20,6 +20,7 @@ class GetNewRefreshTokenServiceImpl(
     override fun execute(refreshToken: String): NewRefreshTokenResponse {
         val refresh = jwtTokenProvider.parseToken(refreshToken)
                 ?: throw InvalidTokenException()
+        val role: String = jwtTokenProvider.exactRoleFromRefreshToken(refresh)
         val email: String = jwtTokenProvider.exactEmailFromRefreshToken(refresh)
         val existingRefreshToken = refreshTokenRepository.findByToken(refresh)
                 ?: throw ExpiredRefreshTokenException()
@@ -37,6 +38,7 @@ class GetNewRefreshTokenServiceImpl(
         return NewRefreshTokenResponse(
                 accessToken = newAccessToken,
                 refreshToken = newRefreshToken,
+                role = role,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )

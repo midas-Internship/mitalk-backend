@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class CustomerUtil(
+class CustomerGeneratedUtil(
         private val customerRepository: CustomerRepository,
         private val refreshTokenRepository: RefreshTokenRepository
 ) {

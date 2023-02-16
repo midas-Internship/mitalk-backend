@@ -30,7 +30,7 @@ class JwtTokenProvider(
         const val ACCESS_TYPE = "access"
         const val REFRESH_TYPE = "refresh"
         const val ACCESS_EXP = 60L * 15 // 15 min
-        const val REFRESH_EXP = 60L * 60 * 24 * 7 // 1 week
+        const val REFRESH_EXP = 60L * 60 * 24 * 7 // 1 weeks
         const val TOKEN_PREFIX = "Bearer "
         const val AUTHORITY = "authority"
     }
@@ -54,6 +54,10 @@ class JwtTokenProvider(
 
     fun exactEmailFromRefreshToken(refresh: String): String {
         return getTokenSubject(refresh, jwtProperties.refreshSecret)
+    }
+
+    fun exactRoleFromRefreshToken(refresh: String): String {
+        return getTokenBody(refresh, jwtProperties.refreshSecret).get(AUTHORITY, String::class.java)
     }
 
     fun authentication(token: String): Authentication {

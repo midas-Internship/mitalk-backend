@@ -28,7 +28,6 @@ class SecurityConfig(
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-
         http
                 .authorizeRequests()
                 .requestMatchers(RequestMatcher { request ->
@@ -43,6 +42,10 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/customer/review").hasAuthority(Role.CUSTOMER.name)
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
                 .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
+
+                // counsellor
+                .antMatchers(HttpMethod.GET, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
+                .antMatchers(HttpMethod.POST, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
 
                 // admin
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
@@ -64,6 +67,7 @@ class SecurityConfig(
 
                 .and()
                 .apply(FilterConfig(jwtTokenProvider, objectMapper))
+
         return http.build()
     }
 

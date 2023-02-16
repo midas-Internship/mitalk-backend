@@ -4,7 +4,7 @@ import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.customer.presentation.data.request.SignInRequest
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
-import com.example.mitalk.domain.customer.util.CustomerUtil
+import com.example.mitalk.domain.customer.util.CustomerGeneratedUtil
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import org.springframework.stereotype.Service
 import java.time.ZonedDateTime
@@ -13,7 +13,7 @@ import java.time.ZonedDateTime
 class SignInService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val customerRepository: CustomerRepository,
-    private val customerUtil: CustomerUtil
+    private val customerGeneratedUtil: CustomerGeneratedUtil
 ) {
     fun execute(requestDto: SignInRequest): SignInResponseDto {
 
@@ -25,14 +25,15 @@ class SignInService(
         val refreshExp: ZonedDateTime = jwtTokenProvider.refreshExpiredTime
 
         if (customer == null) {
-            customerUtil.saveNewCustomer(requestDto, refreshToken)
+            customerGeneratedUtil.saveNewCustomer(requestDto, refreshToken)
         } else {
-            customerUtil.saveNewRefreshToken(customer, refreshToken)
+            customerGeneratedUtil.saveNewRefreshToken(customer, refreshToken)
         }
 
         return SignInResponseDto(
                 accessToken = accessToken,
                 refreshToken = refreshToken,
+                role = Role.CUSTOMER,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )

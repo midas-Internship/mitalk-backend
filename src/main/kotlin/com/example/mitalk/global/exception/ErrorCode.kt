@@ -6,7 +6,7 @@ enum class ErrorCode(
 ) {
     FILE_SIZE_OVER("파일의 크기가 1024MB보다 큼", 400),
 
-    UNAUTHORIZED("권한이 없음", 401),
+    UNAUTHORIZED("승인되지 않았습니다.", 401),
     EXPIRED_TOKEN("만료된 토큰", 401),
 
     CUSTOMER_NOT_FOUND("해당 고객을 찾을 수 없음", 404),
