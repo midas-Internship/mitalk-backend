@@ -33,6 +33,7 @@ class SignInService(
         return SignInResponseDto(
                 accessToken = accessToken,
                 refreshToken = refreshToken,
+                role = Role.CUSTOMER,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )

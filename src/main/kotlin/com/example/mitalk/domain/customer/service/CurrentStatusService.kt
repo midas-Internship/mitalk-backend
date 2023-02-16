@@ -2,17 +2,17 @@ package com.example.mitalk.domain.customer.service
 
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.presentation.data.response.CurrentStatusResponse
-import com.example.mitalk.global.util.CustomerUtil
+import com.example.mitalk.global.util.UserUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
 class CurrentStatusService(
         private val counselorRepository: CounsellorRepository,
-        private val customerUtil: CustomerUtil
+        private val userUtil: UserUtil
 ) {
     fun execute(): CurrentStatusResponse {
-        val needReview = customerUtil.getCurrentCustomer().needReview
+        val needReview = userUtil.getCurrentCustomer().needReview
                 ?: return CurrentStatusResponse(
                         needReview = null,
                         name = null

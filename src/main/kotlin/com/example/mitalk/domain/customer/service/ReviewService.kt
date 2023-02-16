@@ -6,14 +6,14 @@ import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.customer.domain.repository.ReviewElementRepository
 import com.example.mitalk.domain.customer.domain.repository.ReviewRepository
 import com.example.mitalk.domain.customer.presentation.data.request.ReviewRequest
-import com.example.mitalk.global.util.CustomerUtil
+import com.example.mitalk.global.util.UserUtil
 import org.springframework.stereotype.Service
 
 @Service
 class ReviewService(
         private val reviewRepository: ReviewRepository,
         private val reviewElementRepository: ReviewElementRepository,
-        private val customerUtil: CustomerUtil,
+        private val userUtil: UserUtil,
         private val customerRepository: CustomerRepository,
 ) {
     fun execute(requestDto: ReviewRequest) {
@@ -28,7 +28,7 @@ class ReviewService(
             )
         }
 
-        val customer = customerUtil.getCurrentCustomer()
+        val customer = userUtil.getCurrentCustomer()
         customer.needReview = null
 
         customerRepository.save(customer)

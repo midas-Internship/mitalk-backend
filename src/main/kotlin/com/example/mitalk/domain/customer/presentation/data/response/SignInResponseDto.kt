@@ -6,6 +6,7 @@ import java.time.ZonedDateTime
 class SignInResponseDto(
         val accessToken: String,
         val refreshToken: String,
+        val role: Role,
         val accessExp: ZonedDateTime,
         val refreshExp: ZonedDateTime
 ) {

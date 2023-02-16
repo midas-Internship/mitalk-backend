@@ -56,6 +56,10 @@ class JwtTokenProvider(
         return getTokenSubject(refresh, jwtProperties.refreshSecret)
     }
 
+    fun exactRoleFromRefreshToken(refresh: String): String {
+        return getTokenBody(refresh, jwtProperties.refreshSecret).get(AUTHORITY, String::class.java)
+    }
+
     fun authentication(token: String): Authentication {
         val userDetails = getLoadByUserDetail(token)
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
