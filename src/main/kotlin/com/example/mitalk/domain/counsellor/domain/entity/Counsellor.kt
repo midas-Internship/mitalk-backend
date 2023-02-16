@@ -21,7 +21,7 @@ data class Counsellor(
 
     val todayCounsellingCount: Int = 0,
 
-    val status: CounsellorStatus = CounsellorStatus.OFFLINE
+    var status: CounsellorStatus = CounsellorStatus.OFFLINE
 ) {
     constructor(name: String): this(UUID.randomUUID(), null, name, null, null)
 
