@@ -7,6 +7,7 @@ import com.example.mitalk.domain.auth.domain.repository.RefreshTokenRepository
 import com.example.mitalk.domain.auth.exception.OfficialsNotFoundException
 import com.example.mitalk.domain.auth.presentation.data.dto.OfficeTokenDto
 import com.example.mitalk.domain.auth.presentation.data.request.SignInOfficeRequest
+import com.example.mitalk.domain.auth.presentation.data.response.SignInOfficeResponse
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
@@ -23,7 +24,7 @@ class SignInOfficeService(
         private val adminRepository: AdminRepository,
         private val refreshTokenRepository: RefreshTokenRepository
 ) {
-    fun execute(requestDto: SignInOfficeRequest): SignInResponseDto {
+    fun execute(requestDto: SignInOfficeRequest): SignInOfficeResponse {
 
         val officeToken = issueOfficeTokenToAccordingAuthority(requestDto.id)
         val accessExp: ZonedDateTime = jwtTokenProvider.accessExpiredTime
@@ -31,9 +32,10 @@ class SignInOfficeService(
 
         saveNewRefreshToken(officeToken.uuid, officeToken.refreshToken)
 
-        return SignInResponseDto(
+        return SignInOfficeResponse(
                 accessToken = officeToken.accessToken,
                 refreshToken = officeToken.refreshToken,
+                role = officeToken.role,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )
@@ -52,20 +54,20 @@ class SignInOfficeService(
         val admin = adminRepository.findByIdOrNull(id)
 
         if(counsellor != null) {
-            return generatedOfficeToken(counsellor.id)
+            return generatedOfficeToken(counsellor.id, Role.COUNSELLOR)
         }
         else if(admin != null) {
-            return generatedOfficeToken(admin.id)
+            return generatedOfficeToken(admin.id, Role.ADMIN)
         }
 
         return throw OfficialsNotFoundException()
     }
 
-    private fun generatedOfficeToken(uuid: UUID): OfficeTokenDto {
+    private fun generatedOfficeToken(uuid: UUID, role: Role): OfficeTokenDto {
         val accessToken = jwtTokenProvider.generateAccessToken(uuid.toString(), Role.COUNSELLOR)
         val refreshToken = jwtTokenProvider.generateRefreshToken(uuid.toString(), Role.COUNSELLOR)
         val uuid = uuid
-        return OfficeTokenDto(uuid, accessToken, refreshToken)
+        return OfficeTokenDto(uuid, role, accessToken, refreshToken)
 
     }
 }

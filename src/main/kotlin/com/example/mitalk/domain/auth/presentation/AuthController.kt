@@ -2,6 +2,7 @@ package com.example.mitalk.domain.auth.presentation
 
 import com.example.mitalk.domain.auth.presentation.data.request.SignInOfficeRequest
 import com.example.mitalk.domain.auth.presentation.data.response.NewRefreshTokenResponse
+import com.example.mitalk.domain.auth.presentation.data.response.SignInOfficeResponse
 import com.example.mitalk.domain.auth.service.GetNewRefreshTokenService
 import com.example.mitalk.domain.auth.service.impl.SignInOfficeService
 import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
@@ -31,7 +32,7 @@ class AuthController(
     }
 
     @PostMapping("/signin")
-    fun signIn(@RequestBody requestDto: SignInOfficeRequest): SignInResponseDto {
+    fun signIn(@RequestBody requestDto: SignInOfficeRequest): SignInOfficeResponse {
         return officeService.execute(requestDto)
     }
 }
