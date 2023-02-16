@@ -12,18 +12,11 @@ class CreateCounsellorService(
         private val counsellorRepository: CounsellorRepository
 ) {
     fun execute(createCounsellorRequest: CreateCounsellorRequest): CreateCounsellorResponse {
-        val counsellor = generatedCounsellor(createCounsellorRequest.name)
+        val counsellor = Counsellor(createCounsellorRequest.name)
 
         val counsellorId = counsellorRepository.save(counsellor).id
         return CreateCounsellorResponse(counsellorId!!)
     }
 
-    private fun generatedCounsellor(name: String): Counsellor =
-            Counsellor(
-                    id = UUID.randomUUID(),
-                    roomId = null,
-                    name = name,
-                    counsellorSession = null,
-                    customerSession = null
-            )
+
 }
