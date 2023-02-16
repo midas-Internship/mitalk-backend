@@ -33,18 +33,27 @@ class SecurityConfig(
                 .requestMatchers(RequestMatcher { request ->
                     CorsUtils.isPreFlightRequest(request)
                 }).permitAll()
+
+                // file
                 .antMatchers(HttpMethod.POST, "/file").authenticated()
-                .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
-                .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
-                .antMatchers("/auth/hello").hasAuthority(Role.CUSTOMER.name)
+
+                // customer
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
                 .antMatchers(HttpMethod.GET, "/customer/question").authenticated()
                 .antMatchers(HttpMethod.POST, "/customer/review").authenticated()
                 .antMatchers(HttpMethod.GET, "/customer/review").authenticated()
 
+                // admin
+                .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
+                .antMatchers(HttpMethod.POST, "/admin/counsellor").authenticated()
+
+                // auth
+                .antMatchers(HttpMethod.GET,"/auth/hello").hasAuthority(Role.COUNSELLOR.name)
+                .antMatchers(HttpMethod.POST, "/auth/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
 
+                // ws
                 .antMatchers("/ws/chat").permitAll()
                 .anyRequest().denyAll()
 
