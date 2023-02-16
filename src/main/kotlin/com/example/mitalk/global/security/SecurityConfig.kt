@@ -28,7 +28,6 @@ class SecurityConfig(
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
-
         http
                 .authorizeRequests()
                 .requestMatchers(RequestMatcher { request ->
@@ -45,6 +44,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
 
                 // counsellor
+                .antMatchers(HttpMethod.GET, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
                 .antMatchers(HttpMethod.POST, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
 
                 // admin
@@ -67,6 +67,7 @@ class SecurityConfig(
 
                 .and()
                 .apply(FilterConfig(jwtTokenProvider, objectMapper))
+
         return http.build()
     }
 
