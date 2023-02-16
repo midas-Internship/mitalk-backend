@@ -2,10 +2,11 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
-import com.example.mitalk.domain.customer.domain.entity.CustomerIdHash
+import com.example.mitalk.domain.customer.domain.entity.CustomerInfo
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
-import com.example.mitalk.domain.customer.domain.repository.CustomerIdHashRepository
+import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
+import com.example.mitalk.domain.record.domain.entity.CounsellingType
 import com.example.mitalk.domain.record.domain.entity.MessageRecord
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
@@ -35,7 +36,7 @@ class SocketHandler(
     private val counsellorRepository: CounsellorRepository,
     private val sessionUtils: SessionUtils,
     private val tokenProvider: JwtTokenProvider,
-    private val customerIdHashRepository: CustomerIdHashRepository,
+    private val customerInfoRepository: CustomerInfoRepository,
     private val recordRepository: RecordRepository,
     private val customerRepository: CustomerRepository
 ) : TextWebSocketHandler() {
@@ -45,6 +46,7 @@ class SocketHandler(
 
     //session connection 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionEstablished(session: WebSocketSession) {
+        //토큰 검증
         val token = session.handshakeHeaders["Authorization"] ?: TODO("Authorization not found exception")
         val resolvedToken = tokenProvider.parseToken(token[0]) ?: TODO("ERROR")
         val claims = tokenProvider.socketAuthentication(resolvedToken)
@@ -54,7 +56,8 @@ class SocketHandler(
 
         //고객인 경우 -> 대기열 세션 입력
         if (Role.CUSTOMER.name == role) {
-            customerConnectEvent(session, customerRepository.findByEmail(id)!!.id)
+            val type = session.handshakeHeaders["Type"] ?: TODO("Type not found exception")
+            customerConnectEvent(session, customerRepository.findByEmail(id)!!.id, CounsellingType.valueOf(type[0]))
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
@@ -63,7 +66,7 @@ class SocketHandler(
 
     }
 
-    private fun customerConnectEvent(session: WebSocketSession, id: UUID) {
+    private fun customerConnectEvent(session: WebSocketSession, id: UUID, type: CounsellingType) {
         if (!customerQueue.isQueueFull()) {
             customerQueue.zAdd(sessionUtils.add(session))
             println("$session 큐 입력")
@@ -72,8 +75,8 @@ class SocketHandler(
                 message = EnterQueueSuccessMessage(customerQueue.zRank(session.id)),
                 session = session
             )
-            customerIdHashRepository.save(
-                CustomerIdHash(customerId = id, customerSessionId = session.id)
+            customerInfoRepository.save(
+                CustomerInfo(customerId = id, customerSessionId = session.id, type)
             )
         } else {
             println("$session 큐 입력 실패")
@@ -108,7 +111,7 @@ class SocketHandler(
             //TODO ses 메일로 발송
             counsellorRepository.save(counsellor.roomCloseEvent())
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
-            customerIdHashRepository.deleteByCustomerSessionId(session.id)
+            customerInfoRepository.deleteByCustomerSessionId(session.id)
             println("sessionFactory에서 session $removeCount 개가 정상적으로 제거되었습니다.")
         }
 
@@ -121,26 +124,46 @@ class SocketHandler(
         val chatMessage = mapper.readValue(payload, ChatMessage::class.java)
         val counsellor = counsellorRepository.findByRoomId(chatMessage.roomId) ?: TODO("NotFoundException")
 
+        val record = recordRepository.findByIdOrNull(counsellor.roomId) ?: TODO("ERROR")
+
+        if (ChatMessage.ChatMessageType.SEND == chatMessage.chatMessageType) {
+            recordRepository.save(
+                record.add(
+                    MessageRecord(
+                        messageId = chatMessage.messageId,
+                        sender = chatMessage.role,
+                        isFile = chatMessage.message.contains(fileIdentification),
+                        isDeleted = false,
+                        isUpdated = false,
+                        dataMap = linkedMapOf(chatMessage.message to LocalDateTime.now())
+                    )
+                )
+            )
+        } else if (ChatMessage.ChatMessageType.UPDATE == chatMessage.chatMessageType){
+            val messageRecord = record.findMessageRecordById(UUID.randomUUID()) ?: TODO("Message Id Notfound")
+            recordRepository.save(
+                record.updateMessageRecord(
+                    messageRecord.updateData(
+                        chatMessage.message
+                    )
+                )
+            )
+
+        } else if (ChatMessage.ChatMessageType.DELETE == chatMessage.chatMessageType) {
+            val messageRecord = record.findMessageRecordById(UUID.randomUUID()) ?: TODO("Message Id Notfound")
+            recordRepository.save(
+                record.updateMessageRecord(
+                    messageRecord.deleteData()
+                )
+            )
+        }
+
+
         messageUtils.sendChatMessage(
             chatMessage,
             sessionUtils.get(counsellor.customerSession!!),
             sessionUtils.get(counsellor.counsellorSession!!)
         )
-
-        val record = recordRepository.findByIdOrNull(counsellor.roomId) ?: TODO("ERROR")
-
-        recordRepository.save(
-            record.add(
-                MessageRecord(
-                    sender = chatMessage.role,
-                    isFile = chatMessage.message.contains(fileIdentification),
-                    isDeleted = false,
-                    isUpdated = false,
-                    dataMap = linkedMapOf(chatMessage.message to LocalDateTime.now())
-                )
-            )
-        )
-
 
     }
 
