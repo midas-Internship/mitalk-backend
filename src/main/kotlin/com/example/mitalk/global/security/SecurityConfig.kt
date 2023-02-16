@@ -39,10 +39,10 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/file").authenticated()
 
                 // customer
-                .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
-                .antMatchers(HttpMethod.GET, "/customer/question").hasAuthority(Role.CUSTOMER.name)
-                .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.GET, "/customer/question").permitAll()
                 .antMatchers(HttpMethod.GET, "/customer/review").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
+                .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
 
                 // admin
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
