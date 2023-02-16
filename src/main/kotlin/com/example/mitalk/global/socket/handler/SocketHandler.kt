@@ -56,7 +56,7 @@ class SocketHandler(
 
         //고객인 경우 -> 대기열 세션 입력
         if (Role.CUSTOMER.name == role) {
-            val type = session.handshakeHeaders["Type"] ?: TODO("Type not found exception")
+            val type = session.handshakeHeaders["ChatType"] ?: TODO("Type not found exception")
             customerConnectEvent(session, customerRepository.findByEmail(id)!!.id, CounsellingType.valueOf(type[0]))
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
