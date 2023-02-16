@@ -13,7 +13,7 @@ class CustomerDetailService(
         private val customerRepository: CustomerRepository
 ): UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = customerRepository.findByEmail(username) ?: throw CustomerNotFoundException()
-        return CustomerDetails(user)
+        val customer = customerRepository.findByEmail(username) ?: throw CustomerNotFoundException()
+        return CustomerDetails(customer)
     }
 }

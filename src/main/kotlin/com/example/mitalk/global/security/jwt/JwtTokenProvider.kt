@@ -1,7 +1,7 @@
 package com.example.mitalk.global.security.jwt
 
 import com.example.mitalk.domain.auth.domain.Role
-import com.example.mitalk.global.security.auth.CounselorDetailService
+import com.example.mitalk.global.security.auth.CounsellorDetailService
 import com.example.mitalk.global.security.auth.CustomerDetailService
 import com.example.mitalk.global.security.exception.ExpiredTokenException
 import com.example.mitalk.global.security.exception.InvalidTokenException
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest
 class JwtTokenProvider(
         private val jwtProperties: JwtProperties,
         private val customDetailService: CustomerDetailService,
-        private val counselorDetailService: CounselorDetailService
+        private val counsellorDetailService: CounsellorDetailService
 ) {
     companion object {
         const val ACCESS_TYPE = "access"
@@ -96,7 +96,7 @@ class JwtTokenProvider(
     private fun getLoadByUserDetail(token: String): UserDetails {
         return when (getTokenBody(token, jwtProperties.accessSecret).get(AUTHORITY, String::class.java)) {
             Role.CUSTOMER.name -> customDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
-            Role.COUNSELLOR.name -> counselorDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
+            Role.COUNSELLOR.name -> counsellorDetailService.loadUserByUsername(getTokenSubject(token, jwtProperties.accessSecret))
             else -> throw TODO("유효하지 않은 토큰")
         }
     }
