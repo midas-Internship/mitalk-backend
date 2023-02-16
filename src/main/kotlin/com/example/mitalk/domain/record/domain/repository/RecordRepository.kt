@@ -7,4 +7,6 @@ import java.util.UUID
 
 @Repository
 interface RecordRepository: MongoRepository<Record, UUID> {
+    fun findByCustomerId(customerId: UUID): List<Record>
+    fun findByCounsellorId(counsellorId: UUID): List<Record>
 }

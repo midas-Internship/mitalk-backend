@@ -19,8 +19,7 @@ class CustomerGeneratedUtil(
                 id = UUID.randomUUID(),
                 name = request.name,
                 email = request.email,
-                picture = request.profileImg,
-                role = Role.CUSTOMER
+                picture = request.profileImg
         )
 
         customerRepository.save(customer)

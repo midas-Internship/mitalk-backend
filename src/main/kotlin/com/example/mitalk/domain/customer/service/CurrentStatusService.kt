@@ -21,7 +21,7 @@ class CurrentStatusService(
 
         return CurrentStatusResponse(
                 needReview = needReview,
-                name = counsellor?.name
+                name = counsellor.name
         )
     }
 }

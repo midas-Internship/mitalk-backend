@@ -1,8 +1,11 @@
 package com.example.mitalk.global.util
 
 import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
+<<<<<<< Updated upstream
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.counsellor.exception.CounsellorNotFoundException
+=======
+>>>>>>> Stashed changes
 import com.example.mitalk.domain.customer.domain.entity.Customer
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.customer.exception.CustomerNotFoundException
@@ -28,5 +31,11 @@ class UserUtil(
         val principal = SecurityContextHolder.getContext().authentication.principal as CounsellorDetails
         val uuid = principal.username
         return counsellorRepository.findByIdOrNull(UUID.fromString(uuid)) ?: throw CounsellorNotFoundException()
+    }
+
+    fun getCounsellorCustomer(): Counsellor {
+        val principal = SecurityContextHolder.getContext().authentication.principal as CounsellorDetails
+        val email = principal.username
+        return customerRepository.findByEmail(email) ?: TODO("UserNotfound:")
     }
 }

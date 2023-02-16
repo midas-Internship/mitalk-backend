@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
-import org.springframework.web.socket.BinaryMessage
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -165,9 +164,5 @@ class SocketHandler(
             sessionUtils.get(counsellor.counsellorSession!!)
         )
 
-    }
-
-    //binary message 감지-------------------------------------------------------------------------------------------
-    override fun handleBinaryMessage(session: WebSocketSession, message: BinaryMessage) {
     }
 }
