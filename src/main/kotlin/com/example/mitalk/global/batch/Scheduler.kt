@@ -6,7 +6,7 @@ import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
 import com.example.mitalk.domain.record.domain.entity.Record
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
-import com.example.mitalk.domain.customer.domain.repository.CustomerIdHashRepository
+import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
 import com.example.mitalk.global.socket.util.MessageUtils
@@ -22,7 +22,7 @@ class Scheduler(
     private val messageUtils: MessageUtils,
     private val sessionUtils: SessionUtils,
     private val recordRepository: RecordRepository,
-    private val customerIdHashRepository: CustomerIdHashRepository
+    private val customerInfoRepository: CustomerInfoRepository
 ) {
 
     @Scheduled(cron = "*/7 * * * * *")
@@ -62,11 +62,13 @@ class Scheduler(
                 a.counsellingEvent(roomId, b)
             )
 
+            val customerInfo = customerInfoRepository.findByCustomerSessionId(b)!!
             recordRepository.save(
                 Record(
                     id = roomId,
-                    customerId = customerIdHashRepository.findByCustomerSessionId(b)!!.customerId,
-                    counsellorId = a.id!!
+                    customerId = customerInfo.customerId,
+                    counsellorId = a.id!!,
+                    counsellingType = customerInfo.type
                 )
             )
 
