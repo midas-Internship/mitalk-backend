@@ -28,6 +28,7 @@ class SecurityConfig(
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
+
         http
                 .authorizeRequests()
                 .requestMatchers(RequestMatcher { request ->
@@ -39,16 +40,16 @@ class SecurityConfig(
 
                 // customer
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
-                .antMatchers(HttpMethod.GET, "/customer/question").authenticated()
-                .antMatchers(HttpMethod.POST, "/customer/review").authenticated()
-                .antMatchers(HttpMethod.GET, "/customer/review").authenticated()
+                .antMatchers(HttpMethod.GET, "/customer/question").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.GET, "/customer/review").hasAuthority(Role.CUSTOMER.name)
 
                 // admin
-                .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
-                .antMatchers(HttpMethod.POST, "/admin/counsellor").authenticated()
+                .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
 
                 // auth
-                .antMatchers(HttpMethod.GET,"/auth/hello").hasAuthority(Role.COUNSELLOR.name)
+                .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)
                 .antMatchers(HttpMethod.POST, "/auth/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
@@ -63,7 +64,6 @@ class SecurityConfig(
 
                 .and()
                 .apply(FilterConfig(jwtTokenProvider, objectMapper))
-
         return http.build()
     }
 
