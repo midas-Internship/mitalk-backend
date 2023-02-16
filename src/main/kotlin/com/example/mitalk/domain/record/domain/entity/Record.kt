@@ -17,17 +17,29 @@ data class Record(
 
     val counsellorId: UUID,
 
+    val counsellingType: CounsellingType,
+
     val messageRecords: MutableList<MessageRecord> = mutableListOf()
 ) {
     fun add(messageRecord: MessageRecord): Record {
         messageRecords.add(messageRecord)
         return Record(
-            id, startAt, customerId, counsellorId, messageRecords
+            id, startAt, customerId, counsellorId, counsellingType, messageRecords
         )
+    }
+    fun findMessageRecordById(messageId: UUID): MessageRecord? {
+        return messageRecords.find { it.messageId == messageId }
+    }
+
+    fun updateMessageRecord(messageRecord: MessageRecord): Record {
+        messageRecords.filter { it.messageId == messageRecord.messageId }.map{ messageRecord }
+        return this
     }
 }
 
 data class MessageRecord(
+    val messageId: UUID,
+
     val sender: Role,
 
     val isFile: Boolean,
@@ -47,7 +59,7 @@ data class MessageRecord(
         isTimeOverLimit()
 
         dataMap.put(data, LocalDateTime.now())
-        return MessageRecord(sender, isFile,
+        return MessageRecord(messageId, sender, isFile,
             isDeleted = false,
             isUpdated = true,
             dataMap = dataMap
@@ -56,7 +68,7 @@ data class MessageRecord(
 
     fun deleteData(): MessageRecord {
         isTimeOverLimit()
-        return MessageRecord(sender, isFile, isDeleted = true, isUpdated, dataMap)
+        return MessageRecord(messageId, sender, isFile, isDeleted = true, isUpdated, dataMap)
     }
 
     private fun isTimeOverLimit() {

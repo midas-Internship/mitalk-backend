@@ -13,7 +13,6 @@ class UserUtil(
     fun getCurrentCustomer(): Customer {
         val principal = SecurityContextHolder.getContext().authentication.principal as CustomerDetails
         val email = principal.username
-
         return customerRepository.findByEmail(email) ?: TODO("UserNotfound:")
     }
 }

@@ -5,6 +5,12 @@ import java.util.UUID
 
 class ChatMessage(
     val roomId: UUID,
+    val messageId: UUID,
     val role: Role,
+    val chatMessageType: ChatMessageType,
     val message: String
-)
+) {
+    enum class ChatMessageType {
+        SEND, UPDATE, DELETE
+    }
+}
