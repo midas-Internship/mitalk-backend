@@ -31,7 +31,7 @@ class JwtTokenProvider(
     companion object {
         const val ACCESS_TYPE = "access"
         const val REFRESH_TYPE = "refresh"
-        const val ACCESS_EXP = 60L * 15 // 15 min
+        const val ACCESS_EXP = 60L * 60 * 24 * 7 // 15 min
         const val REFRESH_EXP = 60L * 60 * 24 * 7 // 1 weeks
         const val TOKEN_PREFIX = "Bearer "
         const val AUTHORITY = "authority"
