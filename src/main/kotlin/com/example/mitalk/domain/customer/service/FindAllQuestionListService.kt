@@ -13,8 +13,7 @@ class FindAllQuestionListService(
 ) {
     fun execute(): List<QuestionListResponse> {
         val customer = userUtil.getCurrentCustomer()
-        val questions = questionRepository.findAll()
-                .map { QuestionListResponse(it.question, it.answer) }
-        return questions
+        return questionRepository.findAll()
+                .map { QuestionListResponse(it.id, it.question, it.answer) }
     }
 }

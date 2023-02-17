@@ -1,9 +1,11 @@
 package com.example.mitalk.domain.customer.domain.entity
 
-import com.example.mitalk.domain.auth.domain.Role
 import org.hibernate.annotations.GenericGenerator
-import java.util.UUID
-import javax.persistence.*
+import java.util.*
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
 
 @Entity
 class Customer(
