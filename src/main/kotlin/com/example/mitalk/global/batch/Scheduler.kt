@@ -27,10 +27,10 @@ class Scheduler(
 
     @Scheduled(cron = "*/7 * * * * *")
     fun queueSchedule() {
-        println("scheduler실행 (7초마다)")
         val counsellorList = counsellorRepository.findByStatusOrderByTodayCounsellingCountAsc(CounsellorStatus.ONLINE)
 
-        if (counsellorList.isEmpty()) {
+        if (counsellorList.isEmpty() || customerQueue.zSize() == 0L) {
+            println("counsellor or customer empty!!")
             sendCurrentQueueOrder()
             return
         }
@@ -39,43 +39,44 @@ class Scheduler(
         val customerSize = customerQueue.zSize()
 
         if (counsellorSize > customerSize) {
+
+            println("counsellorsize > customersize")
             connection(
                 counsellorList = counsellorList.subList(0, customerSize.toInt()),
-                customerList = customerQueue.zRangeAndDelete(1, customerSize)
+                customerList = customerQueue.zRangeAndDelete(0, customerSize)
             )
         }
         else {
+
+            println("counsellorsize < customersize")
             connection(
                 counsellorList = counsellorList,
-                customerList = customerQueue.zRangeAndDelete(1, counsellorSize.toLong())
+                customerList = customerQueue.zRangeAndDelete(0, counsellorSize.toLong())
             )
         }
         sendCurrentQueueOrder()
     }
 
     private fun connection(counsellorList: List<Counsellor>, customerList: List<String>) {
-        counsellorList.zip(customerList) { a: Counsellor, b: String -> {
+        counsellorList.forEachIndexed { index, counsellor ->
             val roomId = UUID.randomUUID()
             val message = CounsellingStartMessage(roomId)
 
             counsellorRepository.save(
-                a.counsellingEvent(roomId, b)
+                counsellor.counsellingEvent(roomId, customerList[index])
             )
-
-            val customerInfo = customerInfoRepository.findByCustomerSessionId(b)!!
+            val customerInfo = customerInfoRepository.findByCustomerSessionId(customerList[index])!!
             recordRepository.save(
                 Record(
                     id = roomId,
                     customerId = customerInfo.customerId,
-                    counsellorId = a.id!!,
+                    counsellorId = counsellor.id,
                     counsellingType = customerInfo.type
                 )
             )
 
-            messageUtils.sendSystemMessage(message, sessionUtils.get(a.counsellorSession!!))
-            messageUtils.sendSystemMessage(message, sessionUtils.get(b))
-        }
-
+            messageUtils.sendSystemMessage(message, sessionUtils.get(counsellor.counsellorSession!!))
+            messageUtils.sendSystemMessage(message, sessionUtils.get(customerList[index]))
         }
     }
 

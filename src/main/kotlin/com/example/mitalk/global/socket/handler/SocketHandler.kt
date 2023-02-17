@@ -60,7 +60,7 @@ class SocketHandler(
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
-            counsellorConnectionEvent(session, UUID.randomUUID())
+            counsellorConnectionEvent(session, UUID.fromString(id))
         }
 
     }
@@ -129,9 +129,9 @@ class SocketHandler(
             recordRepository.save(
                 record.add(
                     MessageRecord(
-                        messageId = chatMessage.messageId,
+                        messageId = UUID.randomUUID(),
                         sender = chatMessage.role,
-                        isFile = chatMessage.message.contains(fileIdentification),
+                        isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
                         dataMap = linkedMapOf(chatMessage.message to LocalDateTime.now())
@@ -143,7 +143,7 @@ class SocketHandler(
             recordRepository.save(
                 record.updateMessageRecord(
                     messageRecord.updateData(
-                        chatMessage.message
+                        chatMessage.message!!
                     )
                 )
             )
