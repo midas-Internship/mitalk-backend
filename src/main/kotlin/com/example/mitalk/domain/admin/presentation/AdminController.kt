@@ -5,10 +5,8 @@ import com.example.mitalk.domain.admin.presentation.data.request.UpdateQuestionR
 import com.example.mitalk.domain.admin.presentation.data.response.CreateCounsellorResponse
 import com.example.mitalk.domain.admin.presentation.data.response.FindAllCounsellorResponse
 import com.example.mitalk.domain.admin.presentation.data.response.FindQuestionResponse
-import com.example.mitalk.domain.admin.service.CreateCounsellorService
-import com.example.mitalk.domain.admin.service.FindAllCounsellorService
-import com.example.mitalk.domain.admin.service.FindAllQuestionService
-import com.example.mitalk.domain.admin.service.UpdateQuestionService
+import com.example.mitalk.domain.admin.presentation.data.response.GetRecordListRequest
+import com.example.mitalk.domain.admin.service.*
 import com.example.mitalk.domain.customer.presentation.data.response.QuestionListResponse
 import com.example.mitalk.domain.customer.service.FindAllQuestionListService
 import org.springframework.http.HttpStatus
@@ -27,7 +25,8 @@ class AdminController(
         private val createCounsellorService: CreateCounsellorService,
         private val findAllCounsellorService: FindAllCounsellorService,
         private val fidAllQuestionService: FindAllQuestionService,
-        private val updateQuestionService: UpdateQuestionService
+        private val updateQuestionService: UpdateQuestionService,
+        private val getRecordListService: GetRecordListService
 ) {
     @PostMapping("/counsellor")
     fun createCounsellor(@RequestBody createCounsellorRequest: CreateCounsellorRequest): ResponseEntity<CreateCounsellorResponse> =
@@ -44,4 +43,7 @@ class AdminController(
     fun updateQuestion(@PathVariable("question-id") questionId: Long, @RequestBody request: UpdateQuestionRequest) {
         updateQuestionService.execute(questionId, request)
     }
+
+    @GetMapping("/record")
+    fun getRecordList(): List<GetRecordListRequest> = getRecordListService.execute()
 }
