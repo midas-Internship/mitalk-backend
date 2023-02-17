@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository
 
 interface QuestionRepository : CrudRepository<Question, Long> {
     override fun findAll(): List<Question>
-    fun findByQuestion(question: String): Question?
+    fun existsByQuestion(question: String): Boolean
 }

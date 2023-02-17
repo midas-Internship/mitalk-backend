@@ -60,7 +60,7 @@ class SocketHandler(
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
-            counsellorConnectionEvent(session, UUID.randomUUID())
+            counsellorConnectionEvent(session, UUID.fromString(id))
         }
 
     }
