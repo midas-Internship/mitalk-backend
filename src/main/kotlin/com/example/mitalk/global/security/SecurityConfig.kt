@@ -41,6 +41,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/customer/review").hasAuthority(Role.CUSTOMER.name)
                 .antMatchers(HttpMethod.POST, "/customer/signin").permitAll()
                 .antMatchers(HttpMethod.POST, "/customer/review").hasAuthority(Role.CUSTOMER.name)
+                .antMatchers(HttpMethod.GET, "/customer/record").hasAuthority(Role.CUSTOMER.name)
 
                 // counsellor
                 .antMatchers(HttpMethod.GET, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
