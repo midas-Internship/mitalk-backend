@@ -99,8 +99,8 @@ class SocketHandler(
 
     //session close 감지-------------------------------------------------------------------------------------------
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        val removeCount = customerQueue.zDelete(session.id)
-        if (removeCount == 0L) { //상담원이 나갔을때
+        val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
+        if (customerInfo == null) { //상담원이 나갔을때
             val counsellor = counsellorRepository.findByCounsellorSession(session.id)!!
             counsellor.customerSession ?: return
 
@@ -115,7 +115,6 @@ class SocketHandler(
             println("sessionUtils.get + ${sessionUtils.get(counsellor.counsellorSession!!)}")
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
             customerInfoRepository.deleteByCustomerSessionId(session.id)
-            println("sessionFactory에서 session $removeCount 개가 정상적으로 제거되었습니다.")
         }
 
         println("$session 클라이언트 접속 해제 + $status")
