@@ -1,6 +1,7 @@
 package com.example.mitalk.domain.admin.presentation
 
 import com.example.mitalk.domain.admin.presentation.data.request.CreateCounsellorRequest
+import com.example.mitalk.domain.admin.presentation.data.request.CreateQuestionRequest
 import com.example.mitalk.domain.admin.presentation.data.request.UpdateQuestionRequest
 import com.example.mitalk.domain.admin.presentation.data.response.*
 import com.example.mitalk.domain.admin.service.*
@@ -25,7 +26,8 @@ class AdminController(
         private val updateQuestionService: UpdateQuestionService,
         private val getRecordListService: GetRecordListService,
         private val getCustomerListService: GetCustomerListService,
-        private val deleteCounsellorService: DeleteCounsellorService
+        private val deleteCounsellorService: DeleteCounsellorService,
+        private val createQuestionService: CreateQuestionService
 ) {
     @PostMapping("/counsellor")
     fun createCounsellor(@RequestBody createCounsellorRequest: CreateCounsellorRequest): ResponseEntity<CreateCounsellorResponse> =
@@ -53,5 +55,10 @@ class AdminController(
 
     @GetMapping("/customer")
     fun getCustomerList(): List<GetCustomerListResponse> = getCustomerListService.execute()
+
+    @PostMapping("/question")
+    fun createQuestion(@RequestBody createQuestionRequest: CreateQuestionRequest): ResponseEntity<Void> =
+            createQuestionService.execute(createQuestionRequest)
+                    .let { ResponseEntity(HttpStatus.CREATED) }
     
 }

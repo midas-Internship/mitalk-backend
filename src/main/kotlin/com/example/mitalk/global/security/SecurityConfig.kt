@@ -35,6 +35,7 @@ class SecurityConfig(
 
                 // file
                 .antMatchers(HttpMethod.POST, "/file").authenticated()
+                .antMatchers(HttpMethod.POST, "/test").permitAll()
 
                 // customer
                 .antMatchers(HttpMethod.GET, "/customer/question").permitAll()
@@ -52,6 +53,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/question").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.POST, "/admin/question").hasAuthority(Role.COUNSELLOR.name)
                 .antMatchers(HttpMethod.PATCH, "/admin/question").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/record").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/customer").hasAuthority(Role.ADMIN.name)
