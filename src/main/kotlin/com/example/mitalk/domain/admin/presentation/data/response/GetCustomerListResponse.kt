@@ -6,5 +6,5 @@ data class GetCustomerListResponse(
     val id: UUID,
     val name: String,
     val email: String,
-    val session: UUID?
+    val session: String?
 )

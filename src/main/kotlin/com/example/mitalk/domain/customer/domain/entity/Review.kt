@@ -1,6 +1,5 @@
 package com.example.mitalk.domain.customer.domain.entity
 
-import org.jetbrains.annotations.NotNull
 import java.util.UUID
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

@@ -24,7 +24,7 @@ class AdminController(
         private val fidAllQuestionService: FindAllQuestionService,
         private val updateQuestionService: UpdateQuestionService,
         private val getRecordListService: GetRecordListService,
-        private val getCustomerListService: GetCustomerListService
+        private val getCustomerListService: GetCustomerListService,
         private val deleteCounsellorService: DeleteCounsellorService
 ) {
     @PostMapping("/counsellor")
