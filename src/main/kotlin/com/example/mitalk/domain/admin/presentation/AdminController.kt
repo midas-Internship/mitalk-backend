@@ -27,7 +27,9 @@ class AdminController(
         private val getRecordListService: GetRecordListService,
         private val getCustomerListService: GetCustomerListService,
         private val deleteCounsellorService: DeleteCounsellorService,
-        private val createQuestionService: CreateQuestionService
+        private val createQuestionService: CreateQuestionService,
+
+        private val adminResetService: AdminResetService
 ) {
     @PostMapping("/counsellor")
     fun createCounsellor(@RequestBody createCounsellorRequest: CreateCounsellorRequest): ResponseEntity<CreateCounsellorResponse> =
@@ -60,5 +62,10 @@ class AdminController(
     fun createQuestion(@RequestBody createQuestionRequest: CreateQuestionRequest): ResponseEntity<Void> =
             createQuestionService.execute(createQuestionRequest)
                     .let { ResponseEntity(HttpStatus.CREATED) }
-    
+
+
+    @GetMapping("/reset/kururururu")
+    fun reset() {
+        adminResetService.execute()
+    }
 }

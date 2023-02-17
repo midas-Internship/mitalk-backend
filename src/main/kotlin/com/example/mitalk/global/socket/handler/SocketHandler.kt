@@ -129,9 +129,9 @@ class SocketHandler(
             recordRepository.save(
                 record.add(
                     MessageRecord(
-                        messageId = chatMessage.messageId,
+                        messageId = UUID.randomUUID(),
                         sender = chatMessage.role,
-                        isFile = chatMessage.message.contains(fileIdentification),
+                        isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
                         dataMap = linkedMapOf(chatMessage.message to LocalDateTime.now())
@@ -143,7 +143,7 @@ class SocketHandler(
             recordRepository.save(
                 record.updateMessageRecord(
                     messageRecord.updateData(
-                        chatMessage.message
+                        chatMessage.message!!
                     )
                 )
             )
