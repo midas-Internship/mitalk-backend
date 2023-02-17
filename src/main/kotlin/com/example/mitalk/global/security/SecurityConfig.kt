@@ -53,6 +53,9 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.PATCH, "/admin/question").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/record").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/customer").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.DELETE, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
 
                 // auth
                 .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)

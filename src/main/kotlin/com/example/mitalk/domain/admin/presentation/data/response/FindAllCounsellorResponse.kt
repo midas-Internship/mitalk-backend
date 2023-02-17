@@ -6,17 +6,8 @@ import java.util.UUID
 class FindAllCounsellorResponse(
         val counsellorId: UUID?,
 
-        val roomId: UUID?,
-
         val name: String,
 
-        val counsellorSession: String?,
-
-        val customerSession: String?,
-
-        val todayCounsellingCount: Int,
-
         val status: CounsellorStatus
-
 ) {
 }

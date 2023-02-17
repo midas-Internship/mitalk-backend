@@ -4,8 +4,10 @@ import com.example.mitalk.domain.admin.presentation.data.request.CreateCounsello
 import com.example.mitalk.domain.admin.presentation.data.request.UpdateQuestionRequest
 import com.example.mitalk.domain.admin.presentation.data.response.*
 import com.example.mitalk.domain.admin.service.*
+import com.example.mitalk.domain.admin.presentation.data.request.DeleteCounsellorRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -23,7 +25,7 @@ class AdminController(
         private val updateQuestionService: UpdateQuestionService,
         private val getRecordListService: GetRecordListService,
         private val getCustomerListService: GetCustomerListService
-
+        private val deleteCounsellorService: DeleteCounsellorService
 ) {
     @PostMapping("/counsellor")
     fun createCounsellor(@RequestBody createCounsellorRequest: CreateCounsellorRequest): ResponseEntity<CreateCounsellorResponse> =
@@ -32,6 +34,11 @@ class AdminController(
 
     @GetMapping("/counsellor")
     fun findAllCounsellor(): List<FindAllCounsellorResponse> = findAllCounsellorService.execute()
+
+    @DeleteMapping("/counsellor")
+    fun deleteCounsellor(@RequestBody deleteCounsellorRequest: DeleteCounsellorRequest) {
+        deleteCounsellorService.execute(deleteCounsellorRequest)
+    }
 
     @GetMapping("/question")
     fun findAllQuestion(): List<FindQuestionResponse> = fidAllQuestionService.execute()
@@ -46,4 +53,5 @@ class AdminController(
 
     @GetMapping("/customer")
     fun getCustomerList(): List<GetCustomerListResponse> = getCustomerListService.execute()
+    
 }
