@@ -120,21 +120,23 @@ class SocketHandler(
     //text message 감지-------------------------------------------------------------------------------------------
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val payload = message.payload
-        val chatMessage = mapper.readValue(payload, ChatMessage::class.java)
+        var chatMessage = mapper.readValue(payload, ChatMessage::class.java)
         val counsellor = counsellorRepository.findByRoomId(chatMessage.roomId) ?: TODO("NotFoundException")
 
         val record = recordRepository.findByIdOrNull(counsellor.roomId) ?: TODO("ERROR")
 
         if (ChatMessage.ChatMessageType.SEND == chatMessage.chatMessageType) {
+            val newMessageId = UUID.randomUUID()
+            chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
             recordRepository.save(
                 record.add(
                     MessageRecord(
-                        messageId = UUID.randomUUID(),
+                        messageId = newMessageId,
                         sender = chatMessage.role,
                         isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
-                        dataMap = linkedMapOf(chatMessage.message to LocalDateTime.now())
+                        dataMap = linkedMapOf(chatMessage.message!! to LocalDateTime.now())
                     )
                 )
             )
