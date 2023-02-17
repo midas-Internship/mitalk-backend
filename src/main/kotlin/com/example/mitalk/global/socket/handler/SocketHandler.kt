@@ -110,6 +110,9 @@ class SocketHandler(
             val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return
             //TODO ses 메일로 발송
             counsellorRepository.save(counsellor.roomCloseEvent())
+            println("사용자 나감")
+            println("counsellor: ${counsellor.counsellorSession!!}")
+            println("sessionUtils.get + ${sessionUtils.get(counsellor.counsellorSession!!)}")
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
             customerInfoRepository.deleteByCustomerSessionId(session.id)
             println("sessionFactory에서 session $removeCount 개가 정상적으로 제거되었습니다.")
