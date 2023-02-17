@@ -17,7 +17,7 @@ class DeleteCounsellorService(
         if(counsellor.counsellorSession == null) {
             counsellorRepository.delete(counsellor)
         } else {
-            val session = sessionUtils.remove(counsellor.counsellorSession)
+            sessionUtils.remove(counsellor.counsellorSession)
             counsellorRepository.delete(counsellor)
         }
     }

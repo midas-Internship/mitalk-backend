@@ -50,6 +50,7 @@ class SecurityConfig(
                 // admin
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").authenticated()
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/admin/counsellor").authenticated()
 
                 // auth
                 .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)
