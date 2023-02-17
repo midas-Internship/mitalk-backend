@@ -13,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsUtils
 
-
 @Configuration
 class SecurityConfig(
         private val jwtTokenProvider: JwtTokenProvider,
@@ -53,6 +52,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/admin/question").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.PATCH, "/admin/question").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/record").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/customer").hasAuthority(Role.ADMIN.name)
 
                 // auth
                 .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)

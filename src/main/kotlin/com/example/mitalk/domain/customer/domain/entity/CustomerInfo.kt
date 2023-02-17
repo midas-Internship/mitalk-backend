@@ -12,7 +12,7 @@ class CustomerInfo(
     val customerId: UUID,
 
     @Indexed
-    val customerSessionId: String,
+    val customerSessionId: UUID,
 
     val type: CounsellingType
 )
