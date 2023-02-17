@@ -1,12 +1,12 @@
 package com.example.mitalk.global.batch
 
 import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
-import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
-import com.example.mitalk.domain.record.domain.entity.Record
-import com.example.mitalk.domain.record.domain.repository.RecordRepository
+import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
+import com.example.mitalk.domain.record.domain.entity.Record
+import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
 import com.example.mitalk.global.socket.util.MessageUtils
