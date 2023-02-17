@@ -64,8 +64,8 @@ class SignInOfficeService(
     }
 
     private fun generatedOfficeToken(uuid: UUID, role: Role): OfficeTokenDto {
-        val accessToken = jwtTokenProvider.generateAccessToken(uuid.toString(), Role.COUNSELLOR)
-        val refreshToken = jwtTokenProvider.generateRefreshToken(uuid.toString(), Role.COUNSELLOR)
+        val accessToken = jwtTokenProvider.generateAccessToken(uuid.toString(), role)
+        val refreshToken = jwtTokenProvider.generateRefreshToken(uuid.toString(), role)
         val uuid = uuid
         return OfficeTokenDto(uuid, role, accessToken, refreshToken)
 
