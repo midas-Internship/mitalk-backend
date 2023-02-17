@@ -47,6 +47,7 @@ class SocketHandler(
     override fun afterConnectionEstablished(session: WebSocketSession) {
         //토큰 검증
         val token = session.handshakeHeaders["Authorization"] ?: TODO("Authorization not found exception")
+        println("token : " + token[0])
         val resolvedToken = tokenProvider.parseToken(token[0]) ?: TODO("ERROR")
         val claims = tokenProvider.socketAuthentication(resolvedToken)
         val role = claims.get(JwtTokenProvider.AUTHORITY, String::class.java)
@@ -119,12 +120,13 @@ class SocketHandler(
     //text message 감지-------------------------------------------------------------------------------------------
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val payload = message.payload
+        println("데이터 값 : ${message.payload}")
         var chatMessage = mapper.readValue(payload, ChatMessage::class.java)
         val counsellor = counsellorRepository.findByRoomId(chatMessage.roomId) ?: TODO("NotFoundException")
-
         val record = recordRepository.findByIdOrNull(counsellor.roomId) ?: TODO("ERROR")
 
         if (ChatMessage.ChatMessageType.SEND == chatMessage.chatMessageType) {
+            println("send 메세지도착 $chatMessage")
             val newMessageId = UUID.randomUUID()
             chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
             recordRepository.save(
