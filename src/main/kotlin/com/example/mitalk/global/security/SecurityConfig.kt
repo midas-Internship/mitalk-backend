@@ -46,6 +46,7 @@ class SecurityConfig(
                 // counsellor
                 .antMatchers(HttpMethod.GET, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
                 .antMatchers(HttpMethod.POST, "/counsellor/activity").hasAuthority(Role.COUNSELLOR.name)
+                .antMatchers(HttpMethod.GET, "/counsellor/record").hasAuthority(Role.COUNSELLOR.name)
 
                 // admin
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
@@ -63,6 +64,9 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/auth/signin").permitAll()
                 .antMatchers(HttpMethod.PATCH, "/auth").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/auth").authenticated()
+
+                // record
+                .antMatchers(HttpMethod.GET, "/record/{record-id}").authenticated()
 
                 // ws
                 .antMatchers("/ws/chat").permitAll()
