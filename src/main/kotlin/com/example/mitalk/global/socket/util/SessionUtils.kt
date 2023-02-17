@@ -23,4 +23,8 @@ class SessionUtils {
 
         return session.id
     }
+
+    fun removeAll() {
+        SessionFactory = WeakHashMap()
+    }
 }

@@ -60,6 +60,7 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.GET, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.DELETE, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/reset/kururururu").permitAll()
 
                 // auth
                 .antMatchers(HttpMethod.GET, "/auth/hello").hasAuthority(Role.COUNSELLOR.name)
