@@ -2,10 +2,14 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
+import com.example.mitalk.domain.customer.domain.entity.Customer
 import com.example.mitalk.domain.customer.domain.entity.CustomerInfo
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
+import com.example.mitalk.domain.customer.exception.CustomerNotFoundException
+import com.example.mitalk.domain.email.presentation.data.dto.EmailSentDto
+import com.example.mitalk.domain.email.service.MailSenderService
 import com.example.mitalk.domain.record.domain.entity.CounsellingType
 import com.example.mitalk.domain.record.domain.entity.MessageRecord
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
@@ -37,7 +41,8 @@ class SocketHandler(
     private val tokenProvider: JwtTokenProvider,
     private val customerInfoRepository: CustomerInfoRepository,
     private val recordRepository: RecordRepository,
-    private val customerRepository: CustomerRepository
+    private val customerRepository: CustomerRepository,
+    private val mailSenderService: MailSenderService
 ) : TextWebSocketHandler() {
 
     @Value("\${cloud.aws.s3.url}")
@@ -107,7 +112,12 @@ class SocketHandler(
             counsellorRepository.save(counsellor.roomCloseEvent())
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
         } else { //사용자가 나갔을때
+            val customer: Customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: throw CustomerNotFoundException()
             val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return
+
+            if(customer != null) {
+                mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
+            }
             //TODO ses 메일로 발송
             counsellorRepository.save(counsellor.roomCloseEvent())
             println("사용자 나감")
@@ -117,7 +127,7 @@ class SocketHandler(
             customerInfoRepository.deleteByCustomerSessionId(session.id)
         }
 
-        println("$session 클라이언트 접속 해제 + $status")
+        println("${session.id} 클라이언트 접속 해제 + $status")
     }
 
     //text message 감지-------------------------------------------------------------------------------------------
