@@ -2,6 +2,7 @@ server:
   tomcat:
     max-swallow-size: 2024MB
   shutdown: graceful
+  address: 172.20.10.2
 
 spring:
   servlet:
