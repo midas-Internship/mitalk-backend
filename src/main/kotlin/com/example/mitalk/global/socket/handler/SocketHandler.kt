@@ -155,7 +155,7 @@ class SocketHandler(
                 )
             )
         } else if (ChatMessage.ChatMessageType.UPDATE == chatMessage.chatMessageType){
-            val messageRecord = record.findMessageRecordById(UUID.randomUUID()) ?: TODO("Message Id Notfound")
+            val messageRecord = record.findMessageRecordById(chatMessage.messageId?: TODO("Message Id Notfound")) ?: TODO("Message Not found")
             recordRepository.save(
                 record.updateMessageRecord(
                     messageRecord.updateData(
@@ -165,7 +165,7 @@ class SocketHandler(
             )
 
         } else if (ChatMessage.ChatMessageType.DELETE == chatMessage.chatMessageType) {
-            val messageRecord = record.findMessageRecordById(UUID.randomUUID()) ?: TODO("Message Id Notfound")
+            val messageRecord = record.findMessageRecordById(chatMessage.messageId?: TODO("Message Id Notfound")) ?: TODO("Message Not found")
             recordRepository.save(
                 record.updateMessageRecord(
                     messageRecord.deleteData()
