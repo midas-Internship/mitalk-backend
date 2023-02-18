@@ -125,6 +125,7 @@ class SocketHandler(
             println("sessionUtils.get + ${sessionUtils.get(counsellor.counsellorSession!!)}")
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
             customerInfoRepository.deleteByCustomerSessionId(session.id)
+            customerQueue.zDelete(session.id)
         }
 
         println("${session.id} 클라이언트 접속 해제 + $status")
