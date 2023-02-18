@@ -107,14 +107,14 @@ class SocketHandler(
         val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
         if (customerInfo == null) { //상담원이 나갔을때
             val counsellor = counsellorRepository.findByCounsellorSession(session.id)!!
-            counsellor.customerSession ?: return
+            counsellor.customerSession ?: return sessionUtils.remove(session.id)
 
             counsellorRepository.save(counsellor.roomCloseEvent())
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
         } else { //사용자가 나갔을때
 //            val customer: Customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: throw CustomerNotFoundException()
             customerQueue.zDelete(session.id)
-            val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return
+            val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return sessionUtils.remove(session.id)
 
 //            if(customer != null) {
 //                mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
@@ -126,7 +126,6 @@ class SocketHandler(
             println("sessionUtils.get + ${sessionUtils.get(counsellor.counsellorSession!!)}")
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
             customerInfoRepository.deleteByCustomerSessionId(session.id)
-            //customerQueue.zDelete(session.id)
         }
 
         println("${session.id} 클라이언트 접속 해제 + $status")
