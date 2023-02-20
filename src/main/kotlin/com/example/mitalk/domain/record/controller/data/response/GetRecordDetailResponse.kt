@@ -14,6 +14,6 @@ data class GetRecordDetailResponse(
         val isFile: Boolean,
         val isDeleted: Boolean,
         val isUpdated: Boolean,
-        val dataMap: Map<String, LocalDateTime>
+        val dataMap: Map<LocalDateTime, String>
     )
 }

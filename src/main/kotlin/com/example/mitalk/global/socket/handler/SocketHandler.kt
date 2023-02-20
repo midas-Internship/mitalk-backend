@@ -18,8 +18,8 @@ import com.example.mitalk.global.socket.message.ChatMessage
 import com.example.mitalk.global.socket.message.EnterQueueSuccessMessage
 import com.example.mitalk.global.socket.message.QueueAlreadyFilledMessage
 import com.example.mitalk.global.socket.message.RoomBurstEventMessage
-import com.example.mitalk.global.socket.util.SessionUtils
 import com.example.mitalk.global.socket.util.MessageUtils
+import com.example.mitalk.global.socket.util.SessionUtils
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
@@ -29,7 +29,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Component
 class SocketHandler(
@@ -151,7 +151,7 @@ class SocketHandler(
                         isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
-                        dataMap = linkedMapOf(chatMessage.message!! to LocalDateTime.now())
+                        dataMap = linkedMapOf(LocalDateTime.now() to chatMessage.message!!)
                     )
                 )
             )
