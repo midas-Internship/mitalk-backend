@@ -112,13 +112,13 @@ class SocketHandler(
             counsellorRepository.save(counsellor.roomCloseEvent())
             messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
         } else { //사용자가 나갔을때
-//            val customer: Customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: throw CustomerNotFoundException()
+            val customer: Customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: throw CustomerNotFoundException()
             customerQueue.zDelete(session.id)
             val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return sessionUtils.remove(session.id)
 
-//            if(customer != null) {
-//                mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
-//            }
+            if(customer != null) {
+                mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
+            }
             //TODO ses 메일로 발송
             counsellorRepository.save(counsellor.roomCloseEvent())
             println("사용자 나감")
@@ -143,6 +143,7 @@ class SocketHandler(
             println("send 메세지도착 $chatMessage")
             val newMessageId = UUID.randomUUID()
             chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
+            println("두번째 send 메세지 도착 $chatMessage")
             recordRepository.save(
                 record.add(
                     MessageRecord(
