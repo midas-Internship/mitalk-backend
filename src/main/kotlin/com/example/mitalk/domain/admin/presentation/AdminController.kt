@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.UUID
 
 @RestController
 @RequestMapping("/admin")
@@ -39,9 +40,9 @@ class AdminController(
     @GetMapping("/counsellor")
     fun findAllCounsellor(): List<FindAllCounsellorResponse> = findAllCounsellorService.execute()
 
-    @DeleteMapping("/counsellor")
-    fun deleteCounsellor(@RequestBody deleteCounsellorRequest: DeleteCounsellorRequest) {
-        deleteCounsellorService.execute(deleteCounsellorRequest)
+    @DeleteMapping("/counsellor/{uuid}")
+    fun deleteCounsellor(@PathVariable uuid: String) {
+        deleteCounsellorService.execute(uuid)
     }
 
     @GetMapping("/question")

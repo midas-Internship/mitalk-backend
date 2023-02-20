@@ -36,23 +36,32 @@ data class Record(
     }
 
     fun updateMessageRecord(messageRecord: MessageRecord): Record {
-        messageRecords.filter { it.messageId == messageRecord.messageId }.map{ messageRecord }
-        return this
+
+        messageRecords.set(
+                messageRecords.indices.find {
+                    messageRecord.messageId == messageRecords[it].messageId
+                } ?: TODO("NotFound Index"),
+                messageRecord
+        )
+
+        return Record(
+                id, startAt, customerId, customerName, counsellorId, counsellorName, counsellingType, messageRecords
+        )
     }
 }
 
 data class MessageRecord(
-    val messageId: UUID,
+        val messageId: UUID,
 
-    val sender: Role,
+        val sender: Role,
 
-    val isFile: Boolean,
+        val isFile: Boolean,
 
-    val isDeleted: Boolean,
+        val isDeleted: Boolean,
 
-    val isUpdated: Boolean,
+        val isUpdated: Boolean,
 
-    val dataMap: MutableList<MessageData>
+        val dataMap: MutableList<MessageData>
 ) {
 
     data class MessageData(
@@ -77,7 +86,9 @@ data class MessageRecord(
 
     fun deleteData(): MessageRecord {
         isTimeOverLimit()
-        return MessageRecord(messageId, sender, isFile, isDeleted = true, isUpdated, dataMap)
+        return MessageRecord(messageId, sender, isFile,
+                isDeleted = true,
+                isUpdated, dataMap)
     }
 
     private fun isTimeOverLimit() {
