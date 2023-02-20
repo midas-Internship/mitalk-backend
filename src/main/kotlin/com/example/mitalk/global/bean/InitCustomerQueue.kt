@@ -6,7 +6,7 @@ import javax.annotation.PostConstruct
 
 @Component
 class InitCustomerQueue(
-    private val customerQueue: CustomerQueue
+    private val customerQueue: CustomerQueue,
 ) {
 
     @PostConstruct
