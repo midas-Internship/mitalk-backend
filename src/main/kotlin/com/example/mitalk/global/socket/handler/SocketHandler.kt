@@ -151,7 +151,7 @@ class SocketHandler(
                         isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
-                        dataMap = linkedMapOf(LocalDateTime.now() to chatMessage.message!!)
+                        dataMap = mutableListOf(MessageRecord.MessageData(chatMessage.message!!, LocalDateTime.now()))
                     )
                 )
             )

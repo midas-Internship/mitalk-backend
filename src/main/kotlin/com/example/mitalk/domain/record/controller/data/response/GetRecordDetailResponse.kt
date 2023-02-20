@@ -1,6 +1,7 @@
 package com.example.mitalk.domain.record.controller.data.response
 
 import com.example.mitalk.domain.auth.domain.Role
+import com.example.mitalk.domain.record.domain.entity.MessageRecord
 import java.time.LocalDateTime
 
 data class GetRecordDetailResponse(
@@ -14,6 +15,6 @@ data class GetRecordDetailResponse(
         val isFile: Boolean,
         val isDeleted: Boolean,
         val isUpdated: Boolean,
-        val dataMap: Map<LocalDateTime, String>
+        val dataMap: MutableList<MessageRecord.MessageData>
     )
 }
