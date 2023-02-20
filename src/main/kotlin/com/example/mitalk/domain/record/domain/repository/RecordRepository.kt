@@ -9,5 +9,5 @@ import java.util.UUID
 interface RecordRepository: MongoRepository<Record, UUID> {
     fun findByCustomerId(customerId: UUID): List<Record>
     fun findByCounsellorId(counsellorId: UUID): List<Record>
-    fun findTop1ByCustomerIdOrderByStartAtAsc(customerId: UUID): Record
+    fun findTop1ByCustomerIdOrderByStartAtDesc(customerId: UUID): Record
 }
