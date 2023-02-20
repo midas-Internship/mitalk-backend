@@ -48,7 +48,7 @@ data class MessageRecord(
 
     val isUpdated: Boolean,
 
-    val dataMap: LinkedHashMap<String, LocalDateTime>
+    val dataMap: LinkedHashMap<LocalDateTime, String>
 ) {
 
     fun updateData(data: String): MessageRecord {
@@ -58,7 +58,7 @@ data class MessageRecord(
         }
         isTimeOverLimit()
 
-        dataMap.put(data, LocalDateTime.now())
+        dataMap.put(LocalDateTime.now(), data)
         return MessageRecord(messageId, sender, isFile,
             isDeleted = false,
             isUpdated = true,
@@ -72,10 +72,10 @@ data class MessageRecord(
     }
 
     private fun isTimeOverLimit() {
-        if (getCurrentPair().second.plusSeconds(300).isBefore(LocalDateTime.now())) TODO("throw is already over limited")
+        if (getCurrentPair().first.plusSeconds(300).isBefore(LocalDateTime.now())) TODO("throw is already over limited")
     }
 
-    private fun getCurrentPair(): Pair<String, LocalDateTime> {
+    private fun getCurrentPair(): Pair<LocalDateTime, String> {
         return if (isUpdated) {
             dataMap.entries.last().toPair()
         } else {
