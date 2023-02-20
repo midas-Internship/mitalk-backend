@@ -1,7 +1,5 @@
 package com.example.mitalk.domain.record.service
 
-import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
-import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.record.controller.data.response.GetRecordDetailResponse
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import org.springframework.data.repository.findByIdOrNull
@@ -10,9 +8,7 @@ import java.util.UUID
 
 @Service
 class GetRecordDetailService(
-    private val recordRepository: RecordRepository,
-    private val counsellorRepository: CounsellorRepository,
-    private val customerRepository: CustomerRepository
+    private val recordRepository: RecordRepository
 ) {
 
     fun execute(recordId: UUID): GetRecordDetailResponse {
@@ -30,8 +26,8 @@ class GetRecordDetailService(
 
         return GetRecordDetailResponse(
             startAt = record.startAt,
-            customerName = (counsellorRepository.findByIdOrNull(record.counsellorId)?: TODO("counsellor Not Found")).name,
-            counsellorName = (customerRepository.findByIdOrNull(record.customerId)?: TODO("customer Nof Found")).name,
+            customerName = record.customerName,
+            counsellorName = record.counsellorName,
             messageRecords = messageRecords
         )
     }

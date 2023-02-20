@@ -5,12 +5,14 @@ import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
+import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.domain.record.domain.entity.Record
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.socket.message.CounsellingStartMessage
 import com.example.mitalk.global.socket.message.CurrentQueueMessage
 import com.example.mitalk.global.socket.util.MessageUtils
 import com.example.mitalk.global.socket.util.SessionUtils
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.*
@@ -22,7 +24,8 @@ class Scheduler(
     private val messageUtils: MessageUtils,
     private val sessionUtils: SessionUtils,
     private val recordRepository: RecordRepository,
-    private val customerInfoRepository: CustomerInfoRepository
+    private val customerInfoRepository: CustomerInfoRepository,
+    private val customerRepository: CustomerRepository,
 ) {
 
     @Scheduled(cron = "*/7 * * * * *")
@@ -70,7 +73,9 @@ class Scheduler(
                 Record(
                     id = roomId,
                     customerId = customerInfo.customerId,
+                    customerName = (customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer notfound")).name,
                     counsellorId = counsellor.id,
+                    counsellorName = (counsellorRepository.findByIdOrNull(counsellor.id) ?: TODO("Counsellor notfound")).name,
                     counsellingType = customerInfo.type
                 )
             )

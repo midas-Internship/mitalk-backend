@@ -15,7 +15,11 @@ data class Record(
 
     val customerId: UUID,
 
+    val customerName: String,
+
     val counsellorId: UUID,
+
+    val counsellorName: String,
 
     val counsellingType: CounsellingType,
 
@@ -24,7 +28,7 @@ data class Record(
     fun add(messageRecord: MessageRecord): Record {
         messageRecords.add(messageRecord)
         return Record(
-            id, startAt, customerId, counsellorId, counsellingType, messageRecords
+            id, startAt, customerId, customerName, counsellorId, counsellorName, counsellingType, messageRecords
         )
     }
     fun findMessageRecordById(messageId: UUID): MessageRecord? {
