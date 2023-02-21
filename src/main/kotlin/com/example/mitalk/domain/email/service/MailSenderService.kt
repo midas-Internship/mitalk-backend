@@ -2,7 +2,6 @@ package com.example.mitalk.domain.email.service
 
 import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.email.presentation.data.dto.EmailSentDto
-import com.example.mitalk.domain.record.domain.entity.CounsellingType
 import com.example.mitalk.domain.record.domain.entity.Record
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import org.springframework.mail.javamail.JavaMailSender
@@ -13,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 import javax.mail.internet.MimeMessage
 
 
@@ -69,16 +68,23 @@ class MailSenderService(
     }
 
     private fun getRecordTemplate(top1Record: Record): String {
-        val type = top1Record.counsellingType.descritpion
+        val type = top1Record.counsellingType
         val date = "${top1Record.startAt} ~ ${top1Record.messageRecords.last().dataMap.last().localDateTime}"
         var list = ""
         for (it in top1Record.messageRecords) {// 고객 이냐 상담원이냐 여부
             for (i in 0 until it.dataMap.size) {
                 if (it.sender.name == Role.CUSTOMER.name) {
-                    if(it.dataMap[i].message in "https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/") {
+                    println(it.dataMap[i].message)
+                    if(it.dataMap[i].message.contains("https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/")) {
+                        list += "<img src=https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/eb504148-d31d-4fc3-8719-68b0618d4eca-image%253A61.jpeg>"
+//                        list += ("<p style=\"text-align: left; font-size: 15px\"><b>고객</b><br>\n" +
+//                                "                    <image src=${it.dataMap[i].message}\n" +
+//                                "                     style=\"float: left; width: 150px; margin-bottom: 10px\">\n" +
+//                                "                     <p style=\"display: flex; font-size: 12px; position: absolute; width: 56px;height: 21px;left: 230px;top: 580px\">${it.dataMap[i].localDateTime}</p>\n" +
+//                                "                </p>")
+                    } else {
                         list += ("        <p style=\"text-align: left;\"><b>고객</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
                     }
-                    list += ("        <p style=\"text-align: left;\"><b>고객</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
                 } else if (it.sender.name == Role.COUNSELLOR.name) {
                     list += ("        <p style=\"text-align: right;\"><b>상담사</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
                 }
