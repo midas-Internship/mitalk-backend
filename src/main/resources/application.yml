@@ -4,10 +4,17 @@ server:
   shutdown: graceful
 
 spring:
+  thymeleaf:
+    prefix: classpath:/mail-templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    check-template-location: true
+    cache: false
   servlet:
     multipart:
-      max-file-size: 1MB
-      max-request-size: 1MB
+      max-file-size: 1024MB
+      max-request-size: 1024MB
   datasource:
     driver-class-name: ${DB_DRIVER}
     url: ${DB_URL}
