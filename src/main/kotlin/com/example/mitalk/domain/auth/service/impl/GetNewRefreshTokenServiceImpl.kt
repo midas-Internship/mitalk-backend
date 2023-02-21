@@ -21,11 +21,12 @@ class GetNewRefreshTokenServiceImpl(
         val refresh = jwtTokenProvider.parseToken(refreshToken)
                 ?: throw InvalidTokenException()
         val role: String = jwtTokenProvider.exactRoleFromRefreshToken(refresh)
+        val roleEunm = getRoleEunm(role)
         val email: String = jwtTokenProvider.exactEmailFromRefreshToken(refresh)
         val existingRefreshToken = refreshTokenRepository.findByToken(refresh)
                 ?: throw ExpiredRefreshTokenException()
-        val newAccessToken = jwtTokenProvider.generateAccessToken(email, Role.CUSTOMER)
-        val newRefreshToken = jwtTokenProvider.generateRefreshToken(email, Role.CUSTOMER)
+        val newAccessToken = jwtTokenProvider.generateAccessToken(email, roleEunm)
+        val newRefreshToken = jwtTokenProvider.generateRefreshToken(email, roleEunm)
         val accessExp: ZonedDateTime = jwtTokenProvider.accessExpiredTime
         val refreshExp: ZonedDateTime = jwtTokenProvider.refreshExpiredTime
 
@@ -43,4 +44,12 @@ class GetNewRefreshTokenServiceImpl(
                 refreshExp = refreshExp
         )
     }
+
+    private fun getRoleEunm(role: String): Role =
+        when(role) {
+            Role.CUSTOMER.name -> Role.CUSTOMER
+            Role.COUNSELLOR.name -> Role.COUNSELLOR
+            Role.ADMIN.name -> Role.ADMIN
+            else -> Role.CUSTOMER
+        }
 }

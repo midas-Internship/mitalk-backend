@@ -69,14 +69,18 @@ class MailSenderService(
     }
 
     private fun getRecordTemplate(top1Record: Record): String {
-        val type = top1Record.counsellingType.name
+        val type = top1Record.counsellingType.descritpion
+        val date = "${top1Record.startAt} ~ ${top1Record.messageRecords.last().dataMap.last().localDateTime}"
         var list = ""
         for (it in top1Record.messageRecords) {// 고객 이냐 상담원이냐 여부
             for (i in 0 until it.dataMap.size) {
                 if (it.sender.name == Role.CUSTOMER.name) {
+                    if(it.dataMap[i].message in "https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/") {
+                        list += ("        <p style=\"text-align: left;\"><b>고객</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
+                    }
                     list += ("        <p style=\"text-align: left;\"><b>고객</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
                 } else if (it.sender.name == Role.COUNSELLOR.name) {
-                    list += ("        <p style=\"text-align: left;\"><b>상담사</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
+                    list += ("        <p style=\"text-align: right;\"><b>상담사</b> : ${it.dataMap[i].message} ${it.dataMap[i].localDateTime}</p>\n")
                 }
             }
         }
@@ -91,19 +95,19 @@ class MailSenderService(
                 "<body style=\"background-color: rgb(231, 231, 231)\">\n" +
                 "    <h2>상담기록 안내</h2><hr><br>\n" +
                 "    <p>안녕하세요 MiTalk팀의 전승원 상담사 입니다.</p>\n" +
-                "    <table border=\"1\" style=\"text-align: center; border-color: rgb(146, 145, 145); border-width: 3px; border-style: solid;\">\n" +
+                "    <table border=\"1\" style=\"text-align: center; border-color: rgb(109, 109, 109); border-width: 3px; border-style: solid; border-collapse: collapse;\">\n" +
                 "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83); color: rgb(223, 221, 221);\">상담 내용</td>\n" +
+                "            <td style=\"background-color: rgb(83, 83, 83); color: rgb(223, 221, 221); border-style: none;\">상담 내용</td>\n" +
                 "            <td>${type}</td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
                 "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">상담 일시</td>\n" +
-                "            <td>2023-02-20 19:55:06 ~ 2023-02-21 19:55:06</td>\n" +
+                "            <td>${date}</td>\n" +
                 "        </tr>\n" +
                 "        <tr>\n" +
                 "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">채팅 내용</td>\n" +
                 "            <td>\n" +
-                                list
+                                    list
                 "            </td>\n" +
                 "        </tr>\n" +
                 "    </table>\n" +
