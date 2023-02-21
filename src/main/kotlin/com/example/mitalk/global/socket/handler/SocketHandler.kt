@@ -2,12 +2,10 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
-import com.example.mitalk.domain.customer.domain.entity.Customer
 import com.example.mitalk.domain.customer.domain.entity.CustomerInfo
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
-import com.example.mitalk.domain.customer.exception.CustomerNotFoundException
 import com.example.mitalk.domain.email.presentation.data.dto.EmailSentDto
 import com.example.mitalk.domain.email.service.MailSenderService
 import com.example.mitalk.domain.record.domain.entity.CounsellingType
@@ -125,22 +123,22 @@ class SocketHandler(
      */
     @Transactional
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-
+        println("세션 ID" +session.id)
         val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
-
         if (customerInfo == null) {
-
+            println("세션 ID2" +session.id)
             val counsellor = counsellorRepository.findByCounsellorSession(session.id)
+            println("counsellor : " + counsellor)
+            println("cousnellor session :" + counsellor!!.counsellorSession)
             if (counsellor != null) {
-                messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession ?: TODO("Counsellor SessionId NotFound")))
+                println("4")
                 messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession ?: TODO("Customer SessionId NotFound")))
-
+                println("5")
                 val customerInfo = customerInfoRepository.findByCustomerSessionId(counsellor.customerSession) ?: TODO("CustomerInfo NotFound")
                 val customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer NotFound")
-
-                messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
+                println("6")
                 mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
-
+                println("7")
                 customerInfoRepository.delete(customerInfo)
 
                 sessionUtils.remove(counsellor.customerSession)

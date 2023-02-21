@@ -11,6 +11,7 @@ class SessionUtils {
     }
 
     fun get(sessionId: String): WebSocketSession {
+        println("4.1")
         return SessionFactory.get(sessionId) ?: TODO("now found Exception")
     }
 

@@ -36,6 +36,7 @@ class SignInService(
                 accessToken = accessToken,
                 refreshToken = refreshToken,
                 role = Role.CUSTOMER,
+                uuid = customer!!.id,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )
