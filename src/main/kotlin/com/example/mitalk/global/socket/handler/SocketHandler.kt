@@ -129,6 +129,7 @@ class SocketHandler(
                 val customerInfo = customerInfoRepository.findByCustomerSessionId(counsellor.customerSession) ?: TODO("CustomerInfo NotFound")
                 val customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer NotFound")
 
+                messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
                 mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
 
                 customerInfoRepository.delete(customerInfo)
