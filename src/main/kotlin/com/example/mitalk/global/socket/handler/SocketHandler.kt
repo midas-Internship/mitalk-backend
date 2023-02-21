@@ -105,33 +105,46 @@ class SocketHandler(
 
 
     //session close 감지-------------------------------------------------------------------------------------------
+    /*
+     * 수정
+     * counsellor 일때
+     * 1. roomBurstMessage 전송
+     * 2. 사용자한테 mail 발송
+     * 3. customerInfo 제거
+     * 4. sessionFactory 에서 둘다 제거
+     * 5. roomCloseEvent
+     */
     @Transactional
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
+
         val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
-        if (customerInfo == null) { //상담원이 나갔을때
-            val counsellor = counsellorRepository.findByCounsellorSession(session.id)!!
-            counsellor.customerSession ?: return sessionUtils.remove(session.id)
 
-            counsellorRepository.save(counsellor.roomCloseEvent())
-            messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession))
-        } else { //사용자가 나갔을때
-            val customer: Customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: throw CustomerNotFoundException()
-            customerQueue.zDelete(session.id)
-            val counsellor = counsellorRepository.findByCustomerSession(session.id) ?: return sessionUtils.remove(session.id)
+        if (customerInfo == null) {
 
-            if(customer != null) {
+            val counsellor = counsellorRepository.findByCounsellorSession(session.id)
+            if (counsellor != null) {
+                messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession ?: TODO("Counsellor SessionId NotFound")))
+                messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession ?: TODO("Customer SessionId NotFound")))
+
+                val customerInfo = customerInfoRepository.findByCustomerSessionId(counsellor.customerSession) ?: TODO("CustomerInfo NotFound")
+                val customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer NotFound")
+
                 mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
+
+                customerInfoRepository.delete(customerInfo)
+
+                sessionUtils.remove(counsellor.customerSession)
+
+                counsellorRepository.save(counsellor.roomCloseEvent())
+
+                println("${counsellor.roomId} 룸 폭파")
+
             }
-            //TODO ses 메일로 발송
-            counsellorRepository.save(counsellor.roomCloseEvent())
-            println("사용자 나감")
-            println("counsellor: ${counsellor.counsellorSession!!}")
-            println("sessionUtils.get + ${sessionUtils.get(counsellor.counsellorSession!!)}")
-            messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.counsellorSession!!))
-            customerInfoRepository.deleteByCustomerSessionId(session.id)
         }
 
-        println("${session.id} 클라이언트 접속 해제 + $status")
+        sessionUtils.remove(session.id)
+
+        println("${session.id} 클라이언트 접속 해제")
     }
 
     //text message 감지-------------------------------------------------------------------------------------------
@@ -147,7 +160,6 @@ class SocketHandler(
             println("send 메세지도착 $chatMessage")
             val newMessageId = UUID.randomUUID()
             chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
-            println("두번째 send 메세지 도착 $chatMessage")
             recordRepository.save(
                 record.add(
                     MessageRecord(

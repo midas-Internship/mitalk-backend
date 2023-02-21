@@ -4,6 +4,7 @@ import java.util.UUID
 
 class CurrentStatusResponse(
         val needReview: UUID?,
-        val name: String?
+        val counsellorName: String?,
+        val roomId: UUID?
 ) {
 }

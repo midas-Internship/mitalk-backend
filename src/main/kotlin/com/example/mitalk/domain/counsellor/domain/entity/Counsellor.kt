@@ -34,7 +34,7 @@ data class Counsellor(
     )
 
     fun roomCloseEvent() = Counsellor(
-        id, roomId = null, name, counsellorSession, null, todayCounsellingCount, CounsellorStatus.OFFLINE
+        id, roomId = null, name, counsellorSession = null, customerSession = null, todayCounsellingCount, CounsellorStatus.OFFLINE
     )
 
 }
