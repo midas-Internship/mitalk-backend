@@ -9,11 +9,9 @@ import com.example.mitalk.domain.auth.presentation.data.dto.OfficeTokenDto
 import com.example.mitalk.domain.auth.presentation.data.request.SignInOfficeRequest
 import com.example.mitalk.domain.auth.presentation.data.response.SignInOfficeResponse
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
-import com.example.mitalk.domain.customer.presentation.data.response.SignInResponseDto
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.time.ZonedDateTime
 import java.util.*
 
@@ -36,6 +34,7 @@ class SignInOfficeService(
                 accessToken = officeToken.accessToken,
                 refreshToken = officeToken.refreshToken,
                 role = officeToken.role,
+                uuid = officeToken.uuid,
                 accessExp = accessExp,
                 refreshExp = refreshExp
         )

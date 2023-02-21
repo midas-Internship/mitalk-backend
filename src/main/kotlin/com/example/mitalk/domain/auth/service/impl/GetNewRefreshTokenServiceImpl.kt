@@ -25,6 +25,7 @@ class GetNewRefreshTokenServiceImpl(
         val email: String = jwtTokenProvider.exactEmailFromRefreshToken(refresh)
         val existingRefreshToken = refreshTokenRepository.findByToken(refresh)
                 ?: throw ExpiredRefreshTokenException()
+        val uuid = existingRefreshToken.userId
         val newAccessToken = jwtTokenProvider.generateAccessToken(email, roleEunm)
         val newRefreshToken = jwtTokenProvider.generateRefreshToken(email, roleEunm)
         val accessExp: ZonedDateTime = jwtTokenProvider.accessExpiredTime
@@ -39,6 +40,7 @@ class GetNewRefreshTokenServiceImpl(
         return NewRefreshTokenResponse(
                 accessToken = newAccessToken,
                 refreshToken = newRefreshToken,
+                uuid = uuid!!,
                 role = role,
                 accessExp = accessExp,
                 refreshExp = refreshExp

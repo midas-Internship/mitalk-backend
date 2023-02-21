@@ -12,7 +12,9 @@ class MessageUtils(
     private val mapper: ObjectMapper
 ) {
     fun sendSystemMessage(message: SystemMessage, session: WebSocketSession) {
+        println("4.2")
         session.sendMessage(TextMessage(mapper.writeValueAsString(message)))
+        println("4.442")
     }
 
     fun sendChatMessage(message: ChatMessage, customerSession: WebSocketSession, counsellorSession: WebSocketSession) {
