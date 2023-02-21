@@ -5,7 +5,6 @@ import com.example.mitalk.domain.admin.presentation.data.request.CreateQuestionR
 import com.example.mitalk.domain.admin.presentation.data.request.UpdateQuestionRequest
 import com.example.mitalk.domain.admin.presentation.data.response.*
 import com.example.mitalk.domain.admin.service.*
-import com.example.mitalk.domain.admin.presentation.data.request.DeleteCounsellorRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -29,13 +28,15 @@ class AdminController(
         private val getCustomerListService: GetCustomerListService,
         private val deleteCounsellorService: DeleteCounsellorService,
         private val createQuestionService: CreateQuestionService,
+        private val getStatisticsService: GetStatisticsService,
+        private val getStatisticsDetailService: GetStatisticsDetailService,
 
         private val adminResetService: AdminResetService
 ) {
     @PostMapping("/counsellor")
     fun createCounsellor(@RequestBody createCounsellorRequest: CreateCounsellorRequest): ResponseEntity<CreateCounsellorResponse> =
-            createCounsellorService.execute(createCounsellorRequest)
-                    .let { ResponseEntity(it, HttpStatus.CREATED) }
+        createCounsellorService.execute(createCounsellorRequest)
+            .let { ResponseEntity(it, HttpStatus.CREATED) }
 
     @GetMapping("/counsellor")
     fun findAllCounsellor(): List<FindAllCounsellorResponse> = findAllCounsellorService.execute()
@@ -61,9 +62,18 @@ class AdminController(
 
     @PostMapping("/question")
     fun createQuestion(@RequestBody createQuestionRequest: CreateQuestionRequest): ResponseEntity<Void> =
-            createQuestionService.execute(createQuestionRequest)
-                    .let { ResponseEntity(HttpStatus.CREATED) }
+        createQuestionService.execute(createQuestionRequest)
+            .let { ResponseEntity(HttpStatus.CREATED) }
 
+    @GetMapping("/statistics")
+    fun getStatistics(): GetStatisticsResponse {
+        return getStatisticsService.execute()
+    }
+
+    @GetMapping("/statistics/{counsellor-id}")
+    fun getStatisticsDetail(@PathVariable("counsellor-id") counsellorId: UUID): GetStatisticsDetailResponse {
+        return getStatisticsDetailService.execute(counsellorId)
+    }
 
     @GetMapping("/reset/kururururu")
     fun reset() {

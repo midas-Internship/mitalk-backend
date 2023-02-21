@@ -5,13 +5,14 @@ import com.example.mitalk.domain.customer.domain.repository.CustomerInfoReposito
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class GetCustomerListService(
     private val customerRepository: CustomerRepository,
     private val customerInfoRepository: CustomerInfoRepository
 ) {
-
+    @Transactional(readOnly = true)
     fun execute(): List<GetCustomerListResponse> {
         return customerRepository.findAll().map {
             GetCustomerListResponse(

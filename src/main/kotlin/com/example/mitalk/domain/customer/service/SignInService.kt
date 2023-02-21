@@ -7,6 +7,7 @@ import com.example.mitalk.domain.customer.presentation.data.response.SignInRespo
 import com.example.mitalk.domain.customer.util.CustomerGeneratedUtil
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.ZonedDateTime
 
 @Service
@@ -15,6 +16,7 @@ class SignInService(
     private val customerRepository: CustomerRepository,
     private val customerGeneratedUtil: CustomerGeneratedUtil
 ) {
+    @Transactional
     fun execute(requestDto: SignInRequest): SignInResponseDto {
 
         val customer = customerRepository.findByEmail(requestDto.email)

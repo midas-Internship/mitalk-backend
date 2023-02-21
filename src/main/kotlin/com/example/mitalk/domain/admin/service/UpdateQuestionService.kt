@@ -5,12 +5,13 @@ import com.example.mitalk.domain.customer.domain.entity.Question
 import com.example.mitalk.domain.customer.domain.repository.QuestionRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UpdateQuestionService(
     private val questionRepository: QuestionRepository
 ) {
-
+    @Transactional
     fun execute(questionId: Long, request: UpdateQuestionRequest) {
 
         val question = questionRepository.findByIdOrNull(questionId) ?: TODO("questionNotFoundexception")

@@ -2,13 +2,7 @@ package com.example.mitalk.domain.customer.domain.entity
 
 import com.example.mitalk.domain.customer.domain.ReviewItem
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.Embeddable
-import javax.persistence.EmbeddedId
-import javax.persistence.Entity
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
-import javax.persistence.MapsId
+import javax.persistence.*
 
 @Entity
 class ReviewElement(
@@ -22,6 +16,7 @@ class ReviewElement(
 ) {
         @Embeddable
         data class ReviewElementId(
+                @Enumerated(value = EnumType.STRING)
                 @Column(nullable = false)
                 var reviewItem: ReviewItem,
 

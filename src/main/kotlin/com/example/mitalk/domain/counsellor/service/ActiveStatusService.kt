@@ -6,12 +6,14 @@ import com.example.mitalk.domain.counsellor.presentation.data.request.ActivitySt
 import com.example.mitalk.domain.counsellor.presentation.data.response.ActivityStatusResponse
 import com.example.mitalk.global.util.UserUtil
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ActiveStatusService(
         private val counsellorRepository: CounsellorRepository,
         private val userUtil: UserUtil
 ) {
+    @Transactional
     fun execute(activityStatusRequest: ActivityStatusRequest): ActivityStatusResponse {
         val counsellor: Counsellor = userUtil.getCurrentCounsellor()
 

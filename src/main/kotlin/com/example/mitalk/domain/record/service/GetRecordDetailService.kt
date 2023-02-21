@@ -4,13 +4,14 @@ import com.example.mitalk.domain.record.controller.data.response.GetRecordDetail
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
 class GetRecordDetailService(
     private val recordRepository: RecordRepository
 ) {
-
+    @Transactional(readOnly = true)
     fun execute(recordId: UUID): GetRecordDetailResponse {
         val record = recordRepository.findByIdOrNull(recordId)?: TODO("Record Not Found Exception")
 
