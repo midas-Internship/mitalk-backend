@@ -5,5 +5,6 @@ import com.example.mitalk.global.socket.message.element.MessageType
 import java.util.UUID
 
 class CounsellingStartMessage(
-    val roomId: UUID
+    val roomId: UUID,
+    val name: String
 ): SystemMessage(MessageType.SYSTEM_3_1)

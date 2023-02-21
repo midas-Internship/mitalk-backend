@@ -1,4 +1,4 @@
-package com.example.mitalk.domain.record.controller.data.response
+package com.example.mitalk.domain.record.presentation.data.response
 
 import com.example.mitalk.domain.record.domain.entity.CounsellingType
 import java.time.LocalDateTime

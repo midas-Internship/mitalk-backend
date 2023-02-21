@@ -65,25 +65,26 @@ class Scheduler(
     private fun connection(counsellorList: List<Counsellor>, customerList: List<String>) {
         counsellorList.forEachIndexed { index, counsellor ->
             val roomId = UUID.randomUUID()
-            val message = CounsellingStartMessage(roomId)
 
             counsellorRepository.save(
                 counsellor.counsellingEvent(roomId, customerList[index])
             )
             val customerInfo = customerInfoRepository.findByCustomerSessionId(customerList[index])!!
+            val customerName = (customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer notfound")).name
+            val counsellorName = (counsellorRepository.findByIdOrNull(counsellor.id) ?: TODO("Counsellor notfound")).name
             recordRepository.save(
                 Record(
                     id = roomId,
                     customerId = customerInfo.customerId,
-                    customerName = (customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer notfound")).name,
+                    customerName = customerName,
                     counsellorId = counsellor.id,
-                    counsellorName = (counsellorRepository.findByIdOrNull(counsellor.id) ?: TODO("Counsellor notfound")).name,
+                    counsellorName = counsellorName,
                     counsellingType = customerInfo.type
                 )
             )
 
-            messageUtils.sendSystemMessage(message, sessionUtils.get(counsellor.counsellorSession!!))
-            messageUtils.sendSystemMessage(message, sessionUtils.get(customerList[index]))
+            messageUtils.sendSystemMessage(CounsellingStartMessage(roomId, customerName), sessionUtils.get(counsellor.counsellorSession!!))
+            messageUtils.sendSystemMessage(CounsellingStartMessage(roomId, counsellorName), sessionUtils.get(customerList[index]))
         }
     }
 

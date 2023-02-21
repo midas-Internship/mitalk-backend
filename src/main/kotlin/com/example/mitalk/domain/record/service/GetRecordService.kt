@@ -1,6 +1,6 @@
 package com.example.mitalk.domain.record.service
 
-import com.example.mitalk.domain.record.controller.data.response.GetRecordResponse
+import com.example.mitalk.domain.record.presentation.data.response.GetRecordResponse
 import com.example.mitalk.domain.record.domain.entity.Record
 import org.springframework.stereotype.Service
 

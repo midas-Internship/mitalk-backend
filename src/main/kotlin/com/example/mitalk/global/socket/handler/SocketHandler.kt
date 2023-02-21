@@ -14,10 +14,7 @@ import com.example.mitalk.domain.record.domain.entity.CounsellingType
 import com.example.mitalk.domain.record.domain.entity.MessageRecord
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.global.security.jwt.JwtTokenProvider
-import com.example.mitalk.global.socket.message.ChatMessage
-import com.example.mitalk.global.socket.message.EnterQueueSuccessMessage
-import com.example.mitalk.global.socket.message.QueueAlreadyFilledMessage
-import com.example.mitalk.global.socket.message.RoomBurstEventMessage
+import com.example.mitalk.global.socket.message.*
 import com.example.mitalk.global.socket.util.MessageUtils
 import com.example.mitalk.global.socket.util.SessionUtils
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -61,14 +58,26 @@ class SocketHandler(
 
         val id = claims.subject
 
+        val roomId = session.handshakeHeaders["RoomId"]
+
         //고객인 경우 -> 대기열 세션 입력
-        if (Role.CUSTOMER.name == role) {
+        if (Role.CUSTOMER.name == role && roomId.isNullOrEmpty()) {
             val type = session.handshakeHeaders["ChatType"] ?: TODO("Type not found exception")
             customerConnectEvent(session, customerRepository.findByEmail(id)!!.id, CounsellingType.valueOf(type[0]))
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
             counsellorConnectionEvent(session, UUID.fromString(id))
+        } else if (!roomId.isNullOrEmpty()){
+            val roomId = UUID.fromString(roomId[0])
+            val counsellor = counsellorRepository.findByRoomId(roomId) ?: TODO("Invalid room Id")
+            counsellorRepository.save(counsellor.reconnect(sessionUtils.add(session)))
+            val customerInfo = customerInfoRepository.findByIdOrNull(customerRepository.findByEmail(id)!!.id) ?: TODO("CustomerInfo Not Found")
+            customerInfoRepository.save(
+                CustomerInfo(customerInfo.customerId, session.id, customerInfo.type)
+            )
+
+            messageUtils.sendSystemMessage(CounsellingStartMessage(roomId, counsellor.name), session)
         }
 
     }

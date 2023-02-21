@@ -1,7 +1,7 @@
-package com.example.mitalk.domain.record.controller
+package com.example.mitalk.domain.record.presentation
 
-import com.example.mitalk.domain.record.controller.data.response.GetRecordDetailResponse
-import com.example.mitalk.domain.record.controller.data.response.GetRecordResponse
+import com.example.mitalk.domain.record.presentation.data.response.GetRecordDetailResponse
+import com.example.mitalk.domain.record.presentation.data.response.GetRecordResponse
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import com.example.mitalk.domain.record.service.GetRecordDetailService
 import com.example.mitalk.domain.record.service.GetRecordService

@@ -1,6 +1,6 @@
 package com.example.mitalk.domain.record.service
 
-import com.example.mitalk.domain.record.controller.data.response.GetRecordDetailResponse
+import com.example.mitalk.domain.record.presentation.data.response.GetRecordDetailResponse
 import com.example.mitalk.domain.record.domain.repository.RecordRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -17,6 +17,7 @@ class GetRecordDetailService(
 
         val messageRecords = record.messageRecords.map {
             GetRecordDetailResponse.MessageRecordElement(
+                id = it.messageId,
                 sender = it.sender,
                 isFile = it.isFile,
                 isDeleted = it.isDeleted,

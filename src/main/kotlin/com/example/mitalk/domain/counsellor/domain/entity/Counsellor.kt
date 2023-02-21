@@ -25,6 +25,9 @@ data class Counsellor(
 ) {
     constructor(name: String): this(UUID.randomUUID(), null, name, null, null)
 
+    fun reconnect(customerSession: String) = Counsellor(
+        id, roomId, name, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.COUNSELLING
+    )
     fun sessionConnectEvent(counsellorSession: String) = Counsellor(
         id, roomId, name, counsellorSession, customerSession, todayCounsellingCount, CounsellorStatus.ONLINE
     )
