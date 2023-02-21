@@ -11,6 +11,6 @@ class ChatMessage(
     val message: String?
 ) {
     enum class ChatMessageType {
-        SEND, UPDATE, DELETE
+        SEND, UPDATE, DELETE, END
     }
 }

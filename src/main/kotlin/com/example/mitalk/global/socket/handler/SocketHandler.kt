@@ -138,6 +138,7 @@ class SocketHandler(
                 counsellorRepository.save(counsellor.roomCloseEvent())
 
                 println("${counsellor.roomId} 룸 폭파")
+
             }
         }
 
@@ -159,7 +160,6 @@ class SocketHandler(
             println("send 메세지도착 $chatMessage")
             val newMessageId = UUID.randomUUID()
             chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
-            println("두번째 send 메세지 도착 $chatMessage")
             recordRepository.save(
                 record.add(
                     MessageRecord(
