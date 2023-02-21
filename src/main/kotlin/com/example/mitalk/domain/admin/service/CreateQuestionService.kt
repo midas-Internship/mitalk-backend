@@ -5,11 +5,13 @@ import com.example.mitalk.domain.admin.presentation.data.request.CreateQuestionR
 import com.example.mitalk.domain.customer.domain.entity.Question
 import com.example.mitalk.domain.customer.domain.repository.QuestionRepository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CreateQuestionService(
         private val questionRepository: QuestionRepository
 ) {
+    @Transactional
     fun execute(createQuestionRequest: CreateQuestionRequest) {
         val existsByQuestion = questionRepository.existsByQuestion(createQuestionRequest.question)
         if(existsByQuestion) {

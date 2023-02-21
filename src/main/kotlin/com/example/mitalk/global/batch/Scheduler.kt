@@ -15,6 +15,7 @@ import com.example.mitalk.global.socket.util.SessionUtils
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Component
@@ -28,6 +29,7 @@ class Scheduler(
     private val customerRepository: CustomerRepository,
 ) {
 
+    @Transactional
     @Scheduled(cron = "*/7 * * * * *")
     fun queueSchedule() {
         val counsellorList = counsellorRepository.findByStatusOrderByTodayCounsellingCountAsc(CounsellorStatus.ONLINE)

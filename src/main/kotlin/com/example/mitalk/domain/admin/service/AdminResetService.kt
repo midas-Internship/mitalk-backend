@@ -6,6 +6,7 @@ import com.example.mitalk.domain.customer.domain.repository.CustomerInfoReposito
 import com.example.mitalk.domain.customer.domain.repository.CustomerRepository
 import com.example.mitalk.global.socket.util.SessionUtils
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class AdminResetService(
@@ -16,6 +17,7 @@ class AdminResetService(
     private val customerQueue: CustomerQueue
 ) {
 
+    @Transactional
     fun execute() {
         sessionUtils.removeAll()
         customerInfoRepository.deleteAll()

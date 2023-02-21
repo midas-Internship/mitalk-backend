@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
@@ -49,6 +50,7 @@ class SocketHandler(
     lateinit var fileIdentification: String
 
     //session connection 감지-------------------------------------------------------------------------------------------
+    @Transactional
     override fun afterConnectionEstablished(session: WebSocketSession) {
         //토큰 검증
         val token = session.handshakeHeaders["Authorization"] ?: TODO("Authorization not found exception")
@@ -103,6 +105,7 @@ class SocketHandler(
 
 
     //session close 감지-------------------------------------------------------------------------------------------
+    @Transactional
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
         if (customerInfo == null) { //상담원이 나갔을때
@@ -132,6 +135,7 @@ class SocketHandler(
     }
 
     //text message 감지-------------------------------------------------------------------------------------------
+    @Transactional
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         val payload = message.payload
         println("데이터 값 : ${message.payload}")

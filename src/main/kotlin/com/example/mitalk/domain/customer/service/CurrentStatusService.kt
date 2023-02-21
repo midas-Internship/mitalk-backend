@@ -5,12 +5,14 @@ import com.example.mitalk.domain.customer.presentation.data.response.CurrentStat
 import com.example.mitalk.global.util.UserUtil
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CurrentStatusService(
         private val counselorRepository: CounsellorRepository,
         private val userUtil: UserUtil
 ) {
+    @Transactional(readOnly = true)
     fun execute(): CurrentStatusResponse {
         val needReview = userUtil.getCurrentCustomer().needReview
                 ?: return CurrentStatusResponse(

@@ -54,11 +54,13 @@ class SecurityConfig(
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/question").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.POST, "/admin/question").hasAuthority(Role.ADMIN    .name)
-                .antMatchers(HttpMethod.PATCH, "/admin/question").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.PATCH, "/admin/question{question-id}").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/record").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/customer").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.POST, "/admin/counsellor").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.DELETE, "/admin/counsellor/{uuid}").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/statistics").hasAuthority(Role.ADMIN.name)
+                .antMatchers(HttpMethod.GET, "/admin/statistics/{counsellor-id}").hasAuthority(Role.ADMIN.name)
                 .antMatchers(HttpMethod.GET, "/admin/reset/kururururu").permitAll()
 
                 // auth

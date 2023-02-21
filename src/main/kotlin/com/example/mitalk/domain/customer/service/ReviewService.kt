@@ -8,6 +8,7 @@ import com.example.mitalk.domain.customer.domain.repository.ReviewRepository
 import com.example.mitalk.domain.customer.presentation.data.request.ReviewRequest
 import com.example.mitalk.global.util.UserUtil
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ReviewService(
@@ -16,6 +17,7 @@ class ReviewService(
         private val userUtil: UserUtil,
         private val customerRepository: CustomerRepository,
 ) {
+    @Transactional
     fun execute(requestDto: ReviewRequest) {
         if (requestDto.star != null && requestDto.message != null) {
             val review = Review(0, requestDto.star, requestDto.message, requestDto.counsellor)
