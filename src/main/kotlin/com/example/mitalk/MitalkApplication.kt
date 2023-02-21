@@ -11,5 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class MitalkApplication
 
 fun main(args: Array<String>) {
+
     runApplication<MitalkApplication>(*args)
 }
