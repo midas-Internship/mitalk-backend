@@ -70,7 +70,13 @@ class MailSenderService(
                         list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i])
                     } else {
                         println("6")
-                        list += ("        <p style=\"text-align: left;\"><b>고객</b> : ${it.dataMap[i].message} ${getDateFormat(it.dataMap[i].localDateTime)}</p>\n")
+                        list += ("<div class=\"chat-item-box\">\n" +
+                                "    <p class=\"chat-item-name\">고객</p>\n" +
+                                "    <div class=\"chat-item-content\">\n" +
+                                "        <p class=\"chat-p\">${it.dataMap[i].message}</p>\n" +
+                                "        <a class=\"chat-item-content-time\">${it.dataMap[i].localDateTime}</a>\n" +
+                                "    </div>\n" +
+                                "</div>")
                     }
                 } else if (it.sender.name == Role.COUNSELLOR.name) {
 
@@ -78,42 +84,19 @@ class MailSenderService(
                         val extensionName = extractExtensionName(it.dataMap[i].message) // 확장자명
                         list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i])
                     } else {
-                        list += ("        <p style=\"text-align: left;\"><b>상담사</b> : ${it.dataMap[i].message} ${getDateFormat(it.dataMap[i].localDateTime)}</p>\n")
+                        list += ("<div class=\"chat-item-box right\">\n" +
+                                "    <p class=\"chat-item-name\">상 담자</p>\n" +
+                                "    <div class=\"chat-item-content\">\n" +
+                                "        <a class=\"chat-item-content-time\">${it.dataMap[i].message}</a>\n" +
+                                "        <p class=\"chat-p\">${it.dataMap[i].message}</p>\n" +
+                                "    </div>\n" +
+                                "</div>")
                     }
                 }
             }
         }
         println("7")
-        return "<!DOCTYPE html>\n" +
-                "<html lang=\"ko\">\n" +
-                "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <meta property=\"og:type\" content=\"website\">\n" +
-                "    <title>Document</title>\n" +
-                "</head>\n" +
-                "<body style=\"background-color: rgb(231, 231, 231)\">\n" +
-                "    <h2>상담기록 안내</h2><hr><br>\n" +
-                "    <p>안녕하세요 MiTalk팀의 전승원 상담사 입니다.</p>\n" +
-                "    <table border=\"1\" style=\"text-align: center; border-color: rgb(109, 109, 109); border-width: 3px; border-style: solid; border-collapse: collapse;\">\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83); color: rgb(223, 221, 221); border-style: none;\">상담 내용</td>\n" +
-                "            <td>${counsellingQuestionType}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">상담 일시</td>\n" +
-                "            <td>${date}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">채팅 내용</td>\n" +
-                "            <td>\n" +
-                list
-        "            </td>\n" +
-                "        </tr>\n" +
-                "    </table>\n" +
-                "</body>\n" +
-                "</html>"
+        return getTemplate(TemplateDataDto(counsellingQuestionType, date, list))
     }
 
     private fun extractExtensionName(fileName: String): String {
@@ -127,11 +110,32 @@ class MailSenderService(
 
     private fun insertFileByExtensionName(extensionName: String, messageData: MessageRecord.MessageData): String { //
         if (ImageAllowed.values().map { it.name }.contains(extensionName)) {
-            return "<img src=${messageData.message.replace("\"", "")}>"
+            return "<div class=\"chat-item-box right\">\n" +
+                    "    <p class=\"chat-item-name\">상 담자</p>\n" +
+                    "    <div class=\"chat-item-content\">\n" +
+                    "        <a class=\"chat-item-content-time\">${messageData.localDateTime}</a>\n" +
+                    "        <img class=\"chat-img\"\n" +
+                    "            src=${messageData.message.replace("\"", "")} />\n" +
+                    "    </div>\n" +
+                    "</div>"
         } else if (VideoAllowed.values().map { it.name }.contains(extensionName) || "MPEG-2" == extensionName) {
-            return "<a href=${messageData.message.replace("\"", "")}>영상파일</a>"
+            return "<div class=\"chat-item-box right\">\n" +
+                    "    <div class=\"chat-item-content\">\n" +
+                    "        <a class=\"chat-item-content-time\">am 2:40</a>\n" +
+                    "        <a class=\"chat-download\" href=${messageData.message.replace("\"", "")}>영상 다운로드\n" +
+                    "            <img src=\"Frame.svg\" />\n" +
+                    "        </a>\n" +
+                    "    </div>\n" +
+                    "</div>"
         } else if (DocumentAllowed.values().map { it.name }.contains(extensionName)) {
-            return "<a href=${messageData.message.replace("\"", "")}>문서파일</a>"
+            return "<div class=\"chat-item-box right\">\n" +
+                    "    <div class=\"chat-item-content\">\n" +
+                    "        <a class=\"chat-item-content-time\">am 2:40</a>\n" +
+                    "        <a class=\"chat-download\" href=${messageData.message.replace("\"", "")}>파일 다운로드\n" +
+                    "            <img src=\"Frame.svg\" />\n" +
+                    "        </a>\n" +
+                    "    </div>\n" +
+                    "</div>"
         }
         return ""
     }
@@ -157,33 +161,217 @@ class MailSenderService(
     private fun getTemplate(templateDataDto: TemplateDataDto): String {
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"ko\">\n" +
+                "\n" +
                 "<head>\n" +
-                "    <meta charset=\"UTF-8\">\n" +
-                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\">\n" +
-                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                "    <meta property=\"og:type\" content=\"website\">\n" +
+                "    <meta charset=\"UTF-8\" />\n" +
+                "    <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />\n" +
                 "    <title>Document</title>\n" +
+                "    <style>\n" +
+                "        * {\n" +
+                "            box-sizing: border-box;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "        }\n" +
+                "\n" +
+                "        h1,\n" +
+                "        p {\n" +
+                "            color: #262626;\n" +
+                "        }\n" +
+                "\n" +
+                "        body {\n" +
+                "            display: flex;\n" +
+                "            justify-content: center;\n" +
+                "            align-items: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        #Wraaper {\n" +
+                "            width: 1440px;\n" +
+                "            height: 1768px;\n" +
+                "            background: #f7f8fa;\n" +
+                "            padding: 0 364px;\n" +
+                "        }\n" +
+                "\n" +
+                "        header {\n" +
+                "            width: 100%;\n" +
+                "            height: 204px;\n" +
+                "            display: flex;\n" +
+                "            align-items: center;\n" +
+                "        }\n" +
+                "\n" +
+                "        #title {\n" +
+                "            width: 100%;\n" +
+                "            height: 108px;\n" +
+                "            display: flex;\n" +
+                "            flex-direction: column;\n" +
+                "            justify-content: space-between;\n" +
+                "        }\n" +
+                "\n" +
+                "        #title>h1 {\n" +
+                "            font-weight: 700;\n" +
+                "            font-size: 35px;\n" +
+                "            color: #262626;\n" +
+                "        }\n" +
+                "\n" +
+                "        #title>P {\n" +
+                "            font-weight: 500;\n" +
+                "            font-size: 20px;\n" +
+                "            color: #2f76ff;\n" +
+                "        }\n" +
+                "\n" +
+                "        .explanation-box {\n" +
+                "            width: 100%;\n" +
+                "            margin-top: 20px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .explanation-box>p {\n" +
+                "            font-weight: 700;\n" +
+                "            font-size: 22px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .explanation-box>div {\n" +
+                "            width: 712px;\n" +
+                "            height: 76px;\n" +
+                "            background: #ffffff;\n" +
+                "            border-radius: 5px;\n" +
+                "            margin-top: 5px;\n" +
+                "            display: flex;\n" +
+                "            justify-content: center;\n" +
+                "            flex-direction: column;\n" +
+                "            padding: 24px 47px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .explanation-box li {\n" +
+                "            font-size: 22px;\n" +
+                "            line-height: 50px;\n" +
+                "        }\n" +
+                "\n" +
+                "        #chat-box {\n" +
+                "            width: 100%;\n" +
+                "            margin-top: 41px;\n" +
+                "        }\n" +
+                "\n" +
+                "        #chat-box>p {\n" +
+                "            font-weight: 700;\n" +
+                "            font-size: 22px;\n" +
+                "        }\n" +
+                "\n" +
+                "        #chat-box>div {\n" +
+                "            margin-top: 20px;\n" +
+                "            padding: 0 20px;\n" +
+                "            width: 100%;\n" +
+                "            height: 638px;\n" +
+                "            background: #ffffff;\n" +
+                "            border-radius: 5px;\n" +
+                "            display: flex;\n" +
+                "            flex-direction: column;\n" +
+                "            overflow: scroll;\n" +
+                "            overflow-x: hidden;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-item-box {\n" +
+                "            width: 100%;\n" +
+                "            margin-top: 15px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-item-name {\n" +
+                "            width: 100%;\n" +
+                "            font-weight: 700;\n" +
+                "            font-size: 16px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-item-content {\n" +
+                "            margin-top: 14px;\n" +
+                "            width: 100%;\n" +
+                "            display: flex;\n" +
+                "            justify-content: flex-start;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-item-content-time {\n" +
+                "            display: flex;\n" +
+                "            flex-direction: column;\n" +
+                "            justify-content: end;\n" +
+                "            left: 100%;\n" +
+                "            bottom: 0;\n" +
+                "            font-weight: 350;\n" +
+                "            font-size: 15px;\n" +
+                "            margin: 0 5px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .right>p {\n" +
+                "            text-align: right;\n" +
+                "        }\n" +
+                "\n" +
+                "        .right>div {\n" +
+                "            justify-content: flex-end;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-p {\n" +
+                "            font-weight: 400;\n" +
+                "            font-size: 18px;\n" +
+                "            padding: 10px;\n" +
+                "            background: #f2f2f2;\n" +
+                "            border-radius: 10px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-img {\n" +
+                "            width: 173px;\n" +
+                "            height: 139px;\n" +
+                "            object-fit: cover;\n" +
+                "            border-radius: 10px;\n" +
+                "        }\n" +
+                "\n" +
+                "        .chat-download {\n" +
+                "            cursor: pointer;\n" +
+                "            padding: 10px;\n" +
+                "            border-radius: 10px;\n" +
+                "            color: #3b7eff;\n" +
+                "            font-weight: 500;\n" +
+                "            font-size: 18px;\n" +
+                "            background: #f2f2f2;\n" +
+                "            display: flex;\n" +
+                "            gap: 10px;\n" +
+                "            align-items: center;\n" +
+                "        }\n" +
+                "    </style>\n" +
                 "</head>\n" +
-                "<body style=\"background-color: rgb(231, 231, 231)\">\n" +
-                "    <h2>상담기록 안내</h2><hr><br>\n" +
-                "    <p>안녕하세요 MiTalk팀의 전승원 상담사 입니다.</p>\n" +
-                "    <table border=\"1\" style=\"text-align: center; border-color: rgb(109, 109, 109); border-width: 3px; border-style: solid; border-collapse: collapse;\">\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83); color: rgb(223, 221, 221); border-style: none;\">상담 내용</td>\n" +
-                "            <td>${templateDataDto.counsellingType}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">상담 일시</td>\n" +
-                "            <td>${templateDataDto.date}</td>\n" +
-                "        </tr>\n" +
-                "        <tr>\n" +
-                "            <td style=\"background-color: rgb(83, 83, 83);  color: rgb(223, 221, 221);\">채팅 내용</td>\n" +
-                "            <td>\n" +
-                templateDataDto.chatList
-        "            </td>\n" +
-                "        </tr>\n" +
-                "    </table>\n" +
+                "\n" +
+                "<body>\n" +
+                "    <div id=\"Wraaper\">\n" +
+                "        <header>\n" +
+                "            <img id=\"logo\" src=\"./Group_12.png\" />\n" +
+                "        </header>\n" +
+                "        <section>\n" +
+                "            <div id=\"title\">\n" +
+                "                <h1>상담 기록 안내</h1>\n" +
+                "                <p>안녕하세요 Mitalk 지존존짱 전승원입니다.</p>\n" +
+                "            </div>\n" +
+                "            <div class=\"explanation-box\">\n" +
+                "                <p>상담 내용</p>\n" +
+                "                <div>\n" +
+                "                    <ul>\n" +
+                "                        <li>${templateDataDto.counsellingType}</li>\n" +
+                "                    </ul>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div class=\"explanation-box\">\n" +
+                "                <p>상담 일시</p>\n" +
+                "                <div>\n" +
+                "                    <ul>\n" +
+                "                        <li>${templateDataDto.date}</li>\n" +
+                "                    </ul>\n" +
+                "                </div>\n" +
+                "            </div>\n" +
+                "            <div id=\"chat-box\">\n" +
+                "                <p>채팅 내용</p>\n" +
+                "                <div>\n" +
+                                    templateDataDto.chatList
+                "                </div>\n" +
+                "            </div>\n" +
+                "        </section>\n" +
+                "    </div>\n" +
                 "</body>\n" +
+                "\n" +
                 "</html>"
     }
 

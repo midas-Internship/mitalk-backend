@@ -56,17 +56,17 @@ class SocketHandler(
 
         val id = claims.subject
 
-        val roomId = session.handshakeHeaders["RoomId"]
+        val roomId = session.handshakeHeaders["RoomId"]!!
 
         //고객인 경우 -> 대기열 세션 입력
-        if (Role.CUSTOMER.name == role && roomId.isNullOrEmpty()) {
+        if (Role.CUSTOMER.name == role && roomId[0] == "null") {
             val type = session.handshakeHeaders["ChatType"] ?: TODO("Type not found exception")
             customerConnectEvent(session, customerRepository.findByEmail(id)!!.id, CounsellingType.valueOf(type[0]))
             //상담사인 경우 -> MONGO 세션 입력
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
             counsellorConnectionEvent(session, UUID.fromString(id))
-        } else if (!roomId.isNullOrEmpty()){
+        } else if (roomId[0] == "null"){
             val roomId = UUID.fromString(roomId[0])
             val counsellor = counsellorRepository.findByRoomId(roomId) ?: TODO("Invalid room Id")
             counsellorRepository.save(counsellor.reconnect(sessionUtils.add(session)))
