@@ -7,6 +7,7 @@ import com.example.mitalk.domain.customer.domain.repository.ReviewRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 
 @Service
 class GetStatisticsService(
@@ -15,13 +16,14 @@ class GetStatisticsService(
 ) {
     @Transactional(readOnly = true)
     fun execute(): GetStatisticsResponse {
+        val tuple = reviewRepository.getAllReviews()
         return GetStatisticsResponse(
             allStatistics = GetStatisticsResponse.AllStatistic(
-                star = reviewRepository.getAllStar(),
+                star = reviewRepository.getAllStar().toDouble(),
                 reviews = reviewRepository.getAllReviews().map {
                     StatisticReviewElement(
                         reviewItem = it.get(0, String::class.java),
-                        percentage = it.get(1, Double::class.java)
+                        percentage = it.get(1, BigDecimal::class.java).toDouble()
                     )
                 }
             ),
@@ -29,7 +31,7 @@ class GetStatisticsService(
                 GetStatisticsResponse.CounsellorStatics(
                     name = (counsellorRepository.findByIdOrNull(it.counsellor) ?: TODO("Counsellor Not Found E")).name,
                     id = it.counsellor!!,
-                    star = reviewRepository.getStarByCounsellorId(it.counsellor)
+                    star = reviewRepository.getStarByCounsellorId(it.counsellor).toDouble()
                 )
             }
         )

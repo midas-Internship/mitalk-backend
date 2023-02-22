@@ -4,6 +4,7 @@ import com.example.mitalk.domain.admin.presentation.data.response.GetStatisticsD
 import com.example.mitalk.domain.admin.presentation.data.response.StatisticReviewElement
 import com.example.mitalk.domain.customer.domain.repository.ReviewRepository
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.util.UUID
 
 @Service
@@ -16,7 +17,7 @@ class GetStatisticsDetailService(
             reviews = reviewRepository.getReviewByCounsellorId(counsellorId).map {
                 StatisticReviewElement(
                     reviewItem = it.get(0, String::class.java),
-                    percentage = it.get(1, Double::class.java)
+                    percentage = it.get(1, BigDecimal::class.java).toDouble()
                 )
             },
             messages = reviewRepository.findByCounsellor(counsellorId).map { it.message!! }

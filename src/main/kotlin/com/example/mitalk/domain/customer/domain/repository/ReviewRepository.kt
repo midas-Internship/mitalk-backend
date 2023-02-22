@@ -5,16 +5,17 @@ import com.example.mitalk.domain.customer.domain.entity.Review
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.math.BigDecimal
 import java.util.UUID
 import javax.persistence.Tuple
 
 interface ReviewRepository : JpaRepository<Review, Long> {
 
     @Query(value = "select AVG(rv.star) from Review rv")
-    fun getAllStar(): Double
+    fun getAllStar(): BigDecimal
 
     @Query(value = "select AVG(rv.star) from Review rv where rv.counsellor = :counsellor_id")
-    fun getStarByCounsellorId(@Param("counsellor_id") counsellorId: UUID): Double
+    fun getStarByCounsellorId(@Param("counsellor_id") counsellorId: UUID): BigDecimal
 
     @Query(value =
     "select " +
