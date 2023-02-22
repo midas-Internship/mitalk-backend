@@ -151,7 +151,7 @@ class MailSenderService(
     }
 
 
-    private fun checkS3URL(url: String): Boolean = url.contains("https://mitalk-s3.s3.ap-northeast-2.amazonaws.com/")
+    private fun checkS3URL(url: String): Boolean = url.contains("http://d10pkqgki4fe73.cloudfront.net/")
 
     private fun getCounselingType(type: CounsellingType): String {
         return when (type) {
