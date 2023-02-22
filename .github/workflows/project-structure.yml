@@ -1,0 +1,20 @@
+name: Update Project Structure
+
+on:
+  push:
+    branches: [ "deploy" ]
+
+jobs:
+  change-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Insert project tree
+        uses: smoothbear/project-tree-action@1.1.0
+        with:
+          message: "♻️ :: project structure"
+          email: ljchan71@gmail.com
+          username: glay415as
+          token: ${{ secrets.TOKEN }}
+          pr: true
+          branches: docs/project-tree
