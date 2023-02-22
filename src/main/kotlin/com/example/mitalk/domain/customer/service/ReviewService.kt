@@ -18,6 +18,7 @@ class ReviewService(
 ) {
     @Transactional
     fun execute(requestDto: ReviewRequest) {
+        println("ReviewRequest : " + requestDto.toString())
         if (requestDto.star != null && requestDto.message != null) {
             val review = Review(0, requestDto.star, requestDto.message, requestDto.counsellor)
             val reviewId = reviewRepository.save(review).id
@@ -28,8 +29,10 @@ class ReviewService(
                     }
             )
         }
+        println("review 초기화 전")
 
         val customer = userUtil.getCurrentCustomer()
         customer.needReview = null
+        println("review 초기화 후")
     }
 }

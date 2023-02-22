@@ -350,7 +350,7 @@ class MailSenderService(
                 "<body>\n" +
                 "    <div id=\"Wraaper\">\n" +
                 "        <header>\n" +
-                "            <img id=\"logo\" src=\"./Group_12.png\" />\n" +
+                "            <img id=\"logo\" src=https://cdn.discordapp.com/attachments/814021029314953226/1077633980410626048/Group_12.png />\n" +
                 "        </header>\n" +
                 "        <section>\n" +
                 "            <div id=\"title\">\n" +
