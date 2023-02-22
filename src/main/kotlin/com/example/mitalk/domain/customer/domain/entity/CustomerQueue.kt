@@ -12,7 +12,7 @@ class CustomerQueue(
 
     companion object {
         const val KEY = "CustomerQueue"
-        const val MAX_SIZE = 50
+        const val MAX_SIZE = 1
     }
 
 //    /**
