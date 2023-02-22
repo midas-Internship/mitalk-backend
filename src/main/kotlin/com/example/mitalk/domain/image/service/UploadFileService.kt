@@ -46,5 +46,5 @@ class UploadFileService(
 }
 
 private fun createFileName(multipartFile: MultipartFile): String {
-    return "${UUID.randomUUID()}-${multipartFile.originalFilename}"
+    return "${UUID.randomUUID()}"
 }
