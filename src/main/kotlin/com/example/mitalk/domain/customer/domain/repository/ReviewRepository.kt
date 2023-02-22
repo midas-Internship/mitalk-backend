@@ -11,10 +11,10 @@ import javax.persistence.Tuple
 
 interface ReviewRepository : JpaRepository<Review, Long> {
 
-    @Query(value = "select AVG(rv.star) from Review rv")
+    @Query(value = "select COALESCE(AVG(rv.star),0) from Review rv")
     fun getAllStar(): BigDecimal
 
-    @Query(value = "select AVG(rv.star) from Review rv where rv.counsellor = :counsellor_id")
+    @Query(value = "select COALESCE(AVG(rv.star),0) from Review rv where rv.counsellor = :counsellor_id")
     fun getStarByCounsellorId(@Param("counsellor_id") counsellorId: UUID): BigDecimal
 
     @Query(value =
