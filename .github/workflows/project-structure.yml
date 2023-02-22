@@ -2,7 +2,7 @@ name: Update Project Structure
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "error" ]  #error 땜에 못씀
 
 jobs:
   change-readme:
