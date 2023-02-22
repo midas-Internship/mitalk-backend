@@ -163,6 +163,7 @@ class SocketHandler(
         }
 
         sessionUtils.remove(session.id)
+        customerQueue.zDelete(session.id)
 
         println("${session.id} 클라이언트 접속 해제")
     }

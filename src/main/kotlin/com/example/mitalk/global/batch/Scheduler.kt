@@ -30,7 +30,7 @@ class Scheduler(
 ) {
 
     @Transactional
-    @Scheduled(cron = "*/7 * * * * *")
+    @Scheduled(cron = "*/1 * * * * *")
     fun queueSchedule() {
         val counsellorList = counsellorRepository.findByStatusOrderByTodayCounsellingCountAsc(CounsellorStatus.ONLINE)
 
