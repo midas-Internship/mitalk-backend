@@ -2,6 +2,7 @@ package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.auth.domain.Role
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
+import com.example.mitalk.domain.customer.domain.entity.Customer
 import com.example.mitalk.domain.customer.domain.entity.CustomerInfo
 import com.example.mitalk.domain.customer.domain.entity.CustomerQueue
 import com.example.mitalk.domain.customer.domain.repository.CustomerInfoRepository
@@ -140,6 +141,9 @@ class SocketHandler(
                 mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
                 println("7")
                 customerInfoRepository.delete(customerInfo)
+                customerRepository.save(Customer(
+                    id = customer.id, name = customer.name, email = customer.email, picture = customer.picture, needReview = counsellor.id
+                ))
 
                 sessionUtils.remove(counsellor.customerSession)
 

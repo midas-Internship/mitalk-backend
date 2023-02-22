@@ -36,6 +36,7 @@ class CurrentStatusService(
             roomId = counsellor.roomId
         }
 
+
         return CurrentStatusResponse(
             needReview, counsellorName, roomId
         )
