@@ -23,7 +23,6 @@ class UploadFileService(
     lateinit var url: String
 
     fun execute(dto: MultipartFile): FileDto {
-        var result: String = ""
         val fileName = createFileName(dto)
         val objectMetadata = ObjectMetadata()
         objectMetadata.contentLength = dto.size
@@ -41,8 +40,7 @@ class UploadFileService(
                 is MaxUploadSizeExceededException -> throw MaximerFileSizeException()
             }
         }
-        result = amazonS3.getUrl(bucket, fileName).toString()
-        return FileDto(file = result)
+        return FileDto("$url/$fileName")
     }
 
 }
