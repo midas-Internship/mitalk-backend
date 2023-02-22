@@ -27,13 +27,17 @@ class GetStatisticsService(
                     )
                 }
             ),
-            counsellorStatistics = reviewRepository.findAll().map {
-                GetStatisticsResponse.CounsellorStatics(
-                    name = (counsellorRepository.findByIdOrNull(it.counsellor) ?: TODO("Counsellor Not Found E")).name,
-                    id = it.counsellor!!,
-                    star = reviewRepository.getStarByCounsellorId(it.counsellor).toDouble()
-                )
-            }
+            counsellorStatistics = reviewRepository.findAll()
+                .filter {
+                    counsellorRepository.findByIdOrNull(it.counsellor) != null
+                }
+                .map {
+                    GetStatisticsResponse.CounsellorStatics(
+                        name = counsellorRepository.findByIdOrNull(it.counsellor)!!.name,
+                        id = it.counsellor!!,
+                        star = reviewRepository.getStarByCounsellorId(it.counsellor).toDouble()
+                    )
+                }
         )
     }
 }
