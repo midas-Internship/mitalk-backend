@@ -15,7 +15,6 @@ class ReviewService(
         private val reviewRepository: ReviewRepository,
         private val reviewElementRepository: ReviewElementRepository,
         private val userUtil: UserUtil,
-        private val customerRepository: CustomerRepository,
 ) {
     @Transactional
     fun execute(requestDto: ReviewRequest) {
@@ -32,7 +31,5 @@ class ReviewService(
 
         val customer = userUtil.getCurrentCustomer()
         customer.needReview = null
-
-        customerRepository.save(customer)
     }
 }
