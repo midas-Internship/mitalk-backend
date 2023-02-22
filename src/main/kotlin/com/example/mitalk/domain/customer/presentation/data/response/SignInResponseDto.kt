@@ -8,7 +8,7 @@ class SignInResponseDto(
         val accessToken: String,
         val refreshToken: String,
         val role: Role,
-        val uuid: UUID,
+        val uuid: UUID?,
         val accessExp: ZonedDateTime,
         val refreshExp: ZonedDateTime
 ) {

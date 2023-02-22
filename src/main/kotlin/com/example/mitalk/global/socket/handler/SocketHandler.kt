@@ -1,6 +1,8 @@
 package com.example.mitalk.global.socket.handler
 
 import com.example.mitalk.domain.auth.domain.Role
+import com.example.mitalk.domain.counsellor.domain.entity.Counsellor
+import com.example.mitalk.domain.counsellor.domain.entity.CounsellorStatus
 import com.example.mitalk.domain.counsellor.domain.repository.CounsellorRepository
 import com.example.mitalk.domain.customer.domain.entity.Customer
 import com.example.mitalk.domain.customer.domain.entity.CustomerInfo
@@ -67,7 +69,7 @@ class SocketHandler(
         } else if (Role.COUNSELLOR.name == role) {
             //TODO 식별키 가져오기
             counsellorConnectionEvent(session, UUID.fromString(id))
-        } else if (roomId[0] == "null"){
+        } else if (roomId[0] != "null"){
             val roomId = UUID.fromString(roomId[0])
             val counsellor = counsellorRepository.findByRoomId(roomId) ?: TODO("Invalid room Id")
             counsellorRepository.save(counsellor.reconnect(sessionUtils.add(session)))
@@ -124,33 +126,39 @@ class SocketHandler(
      */
     @Transactional
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
-        println("세션 ID" +session.id)
+
         val customerInfo = customerInfoRepository.findByCustomerSessionId(session.id)
+
         if (customerInfo == null) {
-            println("세션 ID2" +session.id)
+
             val counsellor = counsellorRepository.findByCounsellorSession(session.id)
-            println("counsellor : " + counsellor)
-            println("cousnellor session :" + counsellor!!.counsellorSession)
+
             if (counsellor != null) {
-                println("4")
+
                 messageUtils.sendSystemMessage(RoomBurstEventMessage(), sessionUtils.get(counsellor.customerSession ?: TODO("Customer SessionId NotFound")))
-                println("5")
+
                 val customerInfo = customerInfoRepository.findByCustomerSessionId(counsellor.customerSession) ?: TODO("CustomerInfo NotFound")
                 val customer = customerRepository.findByIdOrNull(customerInfo.customerId) ?: TODO("Customer NotFound")
-                println("6")
+
                 mailSenderService.execute(EmailSentDto(customer.email, customerInfo.customerId))
-                println("7")
+
                 customerInfoRepository.delete(customerInfo)
+
                 customerRepository.save(Customer(
                     id = customer.id, name = customer.name, email = customer.email, picture = customer.picture, needReview = counsellor.id
                 ))
 
                 sessionUtils.remove(counsellor.customerSession)
 
-                counsellorRepository.save(counsellor.roomCloseEvent())
+                counsellorRepository.save(Counsellor(
+                        counsellor.id, roomId = null,
+                        counsellor.name, counsellorSession = null,
+                        customerSession = null, counsellor.todayCounsellingCount,
+                        CounsellorStatus.OFFLINE
+                ))
+//                counsellorRepository.save(counsellor.roomCloseEvent())
 
                 println("${counsellor.roomId} 룸 폭파")
-
             }
         }
 
