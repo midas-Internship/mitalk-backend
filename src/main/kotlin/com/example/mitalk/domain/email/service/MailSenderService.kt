@@ -67,11 +67,11 @@ class MailSenderService(
                     if (checkS3URL(it.dataMap[i].message)) { // 이미지나 파일 URL
                         println("5")
                         val extensionName = extractExtensionName(it.dataMap[i].message) // 확장자명
-                        list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i])
+                        list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i], "${top1Record.customerName} 고객님")
                     } else {
                         println("6")
                         list += ("<div class=\"chat-item-box\">\n" +
-                                "    <p class=\"chat-item-name\">고객</p>\n" +
+                                "    <p class=\"chat-item-name\">${top1Record.customerName} 고객님</p>\n" +
                                 "    <div class=\"chat-item-content\">\n" +
                                 "        <p class=\"chat-p\">${it.dataMap[i].message}</p>\n" +
                                 "        <a class=\"chat-item-content-time\">${it.dataMap[i].localDateTime}</a>\n" +
@@ -82,10 +82,10 @@ class MailSenderService(
 
                     if (checkS3URL(it.dataMap[i].message)) {
                         val extensionName = extractExtensionName(it.dataMap[i].message) // 확장자명
-                        list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i])
+                        list += insertFileByExtensionName(extensionName.uppercase(), it.dataMap[i], "${top1Record.counsellorName} 상담사님")
                     } else {
                         list += ("<div class=\"chat-item-box right\">\n" +
-                                "    <p class=\"chat-item-name\">상 담자</p>\n" +
+                                "    <p class=\"chat-item-name\">${top1Record.counsellorName} 상담사님</p>\n" +
                                 "    <div class=\"chat-item-content\">\n" +
                                 "        <a class=\"chat-item-content-time\">${it.dataMap[i].message}</a>\n" +
                                 "        <p class=\"chat-p\">${it.dataMap[i].message}</p>\n" +
@@ -108,10 +108,18 @@ class MailSenderService(
         return ""
     }
 
-    private fun insertFileByExtensionName(extensionName: String, messageData: MessageRecord.MessageData): String { //
+    private fun insertFileByExtensionName(extensionName: String, messageData: MessageRecord.MessageData, name: String): String { //
+        var direction = ""
+        if(name.contains("고객님")) {
+           direction = ""
+        }
+        else if(name.contains("상담사님")) {
+            direction = "right"
+        }
+
         if (ImageAllowed.values().map { it.name }.contains(extensionName)) {
-            return "<div class=\"chat-item-box right\">\n" +
-                    "    <p class=\"chat-item-name\">상 담자</p>\n" +
+            return "<div class=\"chat-item-box ${direction}\">\n" +
+                    "    <p class=\"chat-item-name\">$name</p>\n" +
                     "    <div class=\"chat-item-content\">\n" +
                     "        <a class=\"chat-item-content-time\">${messageData.localDateTime}</a>\n" +
                     "        <img class=\"chat-img\"\n" +
@@ -120,19 +128,21 @@ class MailSenderService(
                     "</div>"
         } else if (VideoAllowed.values().map { it.name }.contains(extensionName) || "MPEG-2" == extensionName) {
             return "<div class=\"chat-item-box right\">\n" +
+                    "    <p class=\"chat-item-name\">$name</p>\n" +
                     "    <div class=\"chat-item-content\">\n" +
                     "        <a class=\"chat-item-content-time\">am 2:40</a>\n" +
                     "        <a class=\"chat-download\" href=${messageData.message.replace("\"", "")}>영상 다운로드\n" +
-                    "            <img src=\"Frame.svg\" />\n" +
+                    "            <img src=https://cdn.discordapp.com/attachments/814021755588182067/1077818737597632543/Vector.png />\n" +
                     "        </a>\n" +
                     "    </div>\n" +
                     "</div>"
         } else if (DocumentAllowed.values().map { it.name }.contains(extensionName)) {
             return "<div class=\"chat-item-box right\">\n" +
+                    "    <p class=\"chat-item-name\">$name</p>\n" +
                     "    <div class=\"chat-item-content\">\n" +
                     "        <a class=\"chat-item-content-time\">am 2:40</a>\n" +
                     "        <a class=\"chat-download\" href=${messageData.message.replace("\"", "")}>파일 다운로드\n" +
-                    "            <img src=\"Frame.svg\" />\n" +
+                    "            <img src=https://cdn.discordapp.com/attachments/814021755588182067/1077818737597632543/Vector.png />\n" +
                     "        </a>\n" +
                     "    </div>\n" +
                     "</div>"
@@ -249,6 +259,7 @@ class MailSenderService(
                 "        #chat-box {\n" +
                 "            width: 100%;\n" +
                 "            margin-top: 41px;\n" +
+                "            word-break:break-all;\n" +
                 "        }\n" +
                 "\n" +
                 "        #chat-box>p {\n" +
@@ -266,7 +277,7 @@ class MailSenderService(
                 "            display: flex;\n" +
                 "            flex-direction: column;\n" +
                 "            overflow: scroll;\n" +
-                "            overflow-x: hidden;\n" +
+                "            overflow-y: hidden;\n" +
                 "        }\n" +
                 "\n" +
                 "        .chat-item-box {\n" +
@@ -344,7 +355,7 @@ class MailSenderService(
                 "        <section>\n" +
                 "            <div id=\"title\">\n" +
                 "                <h1>상담 기록 안내</h1>\n" +
-                "                <p>안녕하세요 Mitalk 지존존짱 전승원입니다.</p>\n" +
+                "                <p>안녕하세요 Mitalk 관계자 전승원입니다.</p>\n" +
                 "            </div>\n" +
                 "            <div class=\"explanation-box\">\n" +
                 "                <p>상담 내용</p>\n" +
