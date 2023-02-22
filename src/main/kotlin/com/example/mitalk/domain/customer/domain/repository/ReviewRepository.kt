@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import java.util.UUID
+import javax.persistence.Tuple
 
 interface ReviewRepository : JpaRepository<Review, Long> {
 
@@ -24,7 +25,7 @@ interface ReviewRepository : JpaRepository<Review, Long> {
             "on rv.id = re.review_id " +
             "group by re.review_item",
         nativeQuery = true)
-    fun getAllReviews(): List<StatisticReviewElement>
+    fun getAllReviews(): List<Tuple>
 
     @Query(value =
     "select " +
@@ -36,7 +37,7 @@ interface ReviewRepository : JpaRepository<Review, Long> {
             "where rv.counsellor = :counsellor_id " +
             "group by re.review_item",
         nativeQuery = true)
-    fun getReviewByCounsellorId(@Param("counsellor_id") counsellorId: UUID): List<StatisticReviewElement>
+    fun getReviewByCounsellorId(@Param("counsellor_id") counsellorId: UUID): List<Tuple>
 
     fun findByCounsellor(counsellor: UUID): List<Review>
 }
