@@ -2,7 +2,7 @@ name: Update Project Structure
 
 on:
   push:
-    branches: [ "deploy" ]
+    branches: [ "main" ]
 
 jobs:
   change-readme:
