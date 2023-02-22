@@ -28,6 +28,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 @Component
@@ -189,7 +190,8 @@ class SocketHandler(
                         isFile = chatMessage.message!!.contains(fileIdentification),
                         isDeleted = false,
                         isUpdated = false,
-                        dataMap = mutableListOf(MessageRecord.MessageData(chatMessage.message!!, LocalDateTime.now()))
+                        dataMap = mutableListOf(MessageRecord.MessageData(chatMessage.message!!, LocalDateTime.now(
+                            ZoneId.of("Asia/Seoul"))))
                     )
                 )
             )

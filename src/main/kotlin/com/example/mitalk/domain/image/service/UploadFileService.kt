@@ -40,11 +40,12 @@ class UploadFileService(
                 is MaxUploadSizeExceededException -> throw MaximerFileSizeException()
             }
         }
-        return FileDto("$url/$fileName")
+        val imagePath: String = amazonS3.getUrl(bucket, fileName).toString()
+        return FileDto(imagePath)
     }
 
 }
 
 private fun createFileName(multipartFile: MultipartFile): String {
-    return "${UUID.randomUUID()}"
+    return "${UUID.randomUUID()}-${multipartFile.originalFilename}"
 }

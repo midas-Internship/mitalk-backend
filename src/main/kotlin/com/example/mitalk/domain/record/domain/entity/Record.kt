@@ -4,6 +4,7 @@ import com.example.mitalk.domain.auth.domain.Role
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.UUID
 
 @Document("record")
@@ -11,7 +12,7 @@ data class Record(
     @Id
     val id: UUID,
 
-    val startAt: LocalDateTime = LocalDateTime.now(),
+    val startAt: LocalDateTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")),
 
     val customerId: UUID,
 
@@ -76,7 +77,7 @@ data class MessageRecord(
         }
         isTimeOverLimit()
 
-        dataMap.add(MessageData(data, LocalDateTime.now()))
+        dataMap.add(MessageData(data, LocalDateTime.now(ZoneId.of("Asia/Seoul"))))
         return MessageRecord(messageId, sender, isFile,
             isDeleted = false,
             isUpdated = true,
@@ -92,7 +93,7 @@ data class MessageRecord(
     }
 
     private fun isTimeOverLimit() {
-        if (getCurrentPair().localDateTime.plusSeconds(300).isBefore(LocalDateTime.now())) TODO("throw is already over limited")
+        if (getCurrentPair().localDateTime.plusSeconds(300).isBefore(LocalDateTime.now(ZoneId.of("Asia/Seoul")))) TODO("throw is already over limited")
     }
 
     private fun getCurrentPair(): MessageData {
