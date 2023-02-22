@@ -177,7 +177,7 @@ class SocketHandler(
         val record = recordRepository.findByIdOrNull(counsellor.roomId) ?: TODO("ERROR")
 
         if (ChatMessage.ChatMessageType.SEND == chatMessage.chatMessageType) {
-            println("send 메세지도착 $chatMessage")
+            println("send  메세지도착 $chatMessage")
             val newMessageId = UUID.randomUUID()
             chatMessage = ChatMessage(chatMessage.roomId, newMessageId, chatMessage.role, chatMessage.chatMessageType, chatMessage.message)
             recordRepository.save(
