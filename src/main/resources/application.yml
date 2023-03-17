@@ -37,7 +37,7 @@ spring:
     port: 587
     protocol: smtp
     default-encoding: UTF-8
-    username: seungwon7308@gmail.com
+    username: 
     password: ${MAIL_PASSWORD}
     properties:
       mail:
